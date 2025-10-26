@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ข้อสอบจีน YCT 1 แบบ Interactive</title> 
+<title>ข้อสอบจีน YCT 1 พร้อมจับเวลา</title> 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
   body { 
-    font-family: 'Noto Sans SC', 'Microsoft JhengHei', 'SimSun', Arial, sans-serif; 
+    font-family: 'Noto Sans SC', 'Microsoft JhengHei', Arial, sans-serif; 
     padding: 20px; 
     background: linear-gradient(135deg, #FFE6F7, #E3F2FD); 
     min-height: 100vh;
@@ -17,16 +17,18 @@
     color: #FF69B4;
     text-shadow: 1px 1px 2px #fff;
   }
+  .timer {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #1565C0;
+    margin-bottom: 15px;
+  }
   .question { 
     margin-bottom: 20px; 
     padding: 20px; 
     background: #fff; 
     border-radius: 15px; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    transition: transform 0.2s;
-  }
-  .question:hover {
-    transform: scale(1.02);
   }
   .options button { 
     margin: 5px 10px 5px 0; 
@@ -52,9 +54,7 @@
     cursor: pointer; 
     font-size: 1rem;
   }
-  .next-btn:hover {
-    background-color: #42A5F5;
-  }
+  .next-btn:hover { background-color: #42A5F5; }
   h2 {
     text-align: center;
     color: #FF4081;
@@ -70,13 +70,12 @@
     font-size: 1rem;
     cursor: pointer;
   }
-  .restart-btn:hover {
-    background-color: #FF8FAB;
-  }
+  .restart-btn:hover { background-color: #FF8FAB; }
 </style>
 </head>
 <body>
-<h1>ข้อสอบจีน YCT 1 (Interactive)</h1>
+<h1>ข้อสอบจีน YCT 1 (จับเวลา 3 นาที/ข้อ)</h1>
+<div class="timer" id="timer">เหลือเวลา: 105:00 นาที</div>
 <div id="quiz"></div>
 <script>
 const quizData = [
@@ -119,8 +118,14 @@ const quizData = [
 
 let currentQuestion = 0;
 let score = 0;
+let questionTime = 180; // 3 นาทีต่อข้อ
+let totalTime = 105 * 60; // รวม 105 นาที
+let timerInterval;
 
 function showQuestion() {
+  clearInterval(timerInterval);
+  if (currentQuestion >= quizData.length) return showResult();
+
   const quizDiv = document.getElementById('quiz');
   quizDiv.innerHTML = '';
   const q = quizData[currentQuestion];
@@ -137,9 +142,41 @@ function showQuestion() {
   });
   questionEl.appendChild(optionsDiv);
   quizDiv.appendChild(questionEl);
+
+  startQuestionTimer();
+}
+
+function startQuestionTimer() {
+  let timeLeft = questionTime;
+  const timerDisplay = document.getElementById('timer');
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    totalTime--;
+    const min = Math.floor(totalTime / 60);
+    const sec = totalTime % 60;
+    timerDisplay.textContent = `เหลือเวลา: ${min}:${sec.toString().padStart(2,'0')} นาที`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      nextQuestionAuto();
+    }
+    if (totalTime <= 0) {
+      clearInterval(timerInterval);
+      showResult();
+    }
+  }, 1000);
+}
+
+function nextQuestionAuto() {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
 }
 
 function checkAnswer(selected) {
+  clearInterval(timerInterval);
   const q = quizData[currentQuestion];
   const buttons = document.querySelectorAll('.options button');
   buttons.forEach((btn, idx) => {
@@ -151,19 +188,18 @@ function checkAnswer(selected) {
   const nextBtn = document.createElement('button');
   nextBtn.className = 'next-btn';
   nextBtn.innerText = currentQuestion < quizData.length-1 ? 'ข้อถัดไป' : 'จบข้อสอบ';
-  nextBtn.onclick = () => {
-    currentQuestion++;
-    if(currentQuestion < quizData.length){ showQuestion(); } else { showResult(); }
-  };
+  nextBtn.onclick = nextQuestionAuto;
   document.getElementById('quiz').appendChild(nextBtn);
 }
 
 function showResult() {
+  clearInterval(timerInterval);
   const quizDiv = document.getElementById('quiz');
-  document.querySelector('h1').style.display = 'none'; // 🔹 ซ่อนหัวข้อเมื่อจบข้อสอบ
+  document.querySelector('h1').style.display = 'none'; 
+  document.getElementById('timer').style.display = 'none';
 
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
-  if(score === quizData.length) {
+  if (score === quizData.length) {
     resultText += ' 💯';
   } else if (score <= 34) {
     resultText += ' 😩';
@@ -176,7 +212,9 @@ function showResult() {
 function restartQuiz() {
   score = 0;
   currentQuestion = 0;
+  totalTime = 105 * 60;
   document.querySelector('h1').style.display = 'block';
+  document.getElementById('timer').style.display = 'block';
   showQuestion();
 }
 
