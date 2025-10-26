@@ -59,6 +59,20 @@
     text-align: center;
     color: #FF4081;
   }
+  .restart-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #FFB6C1;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .restart-btn:hover {
+    background-color: #FF8FAB;
+  }
 </style>
 </head>
 <body>
@@ -146,13 +160,24 @@ function checkAnswer(selected) {
 
 function showResult() {
   const quizDiv = document.getElementById('quiz');
+  document.querySelector('h1').style.display = 'none'; // 🔹 ซ่อนหัวข้อเมื่อจบข้อสอบ
+
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
   if(score === quizData.length) {
     resultText += ' 💯';
   } else if (score <= 34) {
     resultText += ' 😩';
   }
-  quizDiv.innerHTML = `<h2>${resultText}</h2>`;
+
+  quizDiv.innerHTML = `<h2>${resultText}</h2>
+    <button class="restart-btn" onclick="restartQuiz()">เริ่มทำใหม่อีกครั้ง</button>`;
+}
+
+function restartQuiz() {
+  score = 0;
+  currentQuestion = 0;
+  document.querySelector('h1').style.display = 'block';
+  showQuestion();
 }
 
 showQuestion();
