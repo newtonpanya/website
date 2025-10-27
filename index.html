@@ -79,47 +79,47 @@
 </style>
 </head>
 <body>
-<h1>ข้อสอบจีน YCT 1 เเบบ Online</h1>
+<h1>ข้อสอบจีน YCT 1 แบบ Online</h1>
 <div class="timer" id="timer">เหลือเวลา: 52:30 นาที</div>
 <div id="quiz"></div>
 
 <script>
 const quizData = [
-  { q: "你好吗？", options: ["สวัสดี", "สบายดีไหม", "ลาก่อน"], answer: 1 },
-  { q: "苹果", options: ["ส้ม", "แอปเปิล", "กล้วย"], answer: 1 },
-  { q: "老师", options: ["นักเรียน", "ครู", "เพื่อน"], answer: 1 },
-  { q: "狗", options: ["แมว", "สุนัข", "ปลา"], answer: 1 },
-  { q: "水", options: ["น้ำ", "น้ำส้ม", "น้ำชา"], answer: 0 },
-  { q: "谢谢", options: ["ขอบคุณ", "ขอโทษ", "สวัสดี"], answer: 0 },
-  { q: "再见", options: ["ลาก่อน", "ขอบคุณ", "ขอโทษ"], answer: 0 },
-  { q: "妈妈", options: ["แม่", "พ่อ", "พี่ชาย"], answer: 0 },
-  { q: "爸爸", options: ["แม่", "พ่อ", "ลูกชาย"], answer: 1 },
-  { q: "中国", options: ["ประเทศไทย", "จีน", "ญี่ปุ่น"], answer: 1 },
-  { q: "学校", options: ["บ้าน", "โรงเรียน", "ร้านอาหาร"], answer: 1 },
-  { q: "学生", options: ["ครู", "เพื่อน", "นักเรียน"], answer: 2 },
-  { q: "老师好", options: ["สวัสดีคุณครู", "ลาก่อน", "ขอโทษ"], answer: 0 },
-  { q: "我", options: ["เธอ", "ฉัน", "เขา"], answer: 1 },
-  { q: "你", options: ["ฉัน", "เธอ", "เขา"], answer: 1 },
-  { q: "他", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "ฉัน"], answer: 1 },
-  { q: "她", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "เรา"], answer: 0 },
-  { q: "朋友", options: ["เพื่อน", "พี่ชาย", "ครู"], answer: 0 },
-  { q: "吃", options: ["กิน", "ดื่ม", "นอน"], answer: 0 },
-  { q: "喝", options: ["กิน", "ดื่ม", "เรียน"], answer: 1 },
-  { q: "米饭", options: ["ข้าวสวย", "ข้าวผัด", "ก๋วยเตี๋ยว"], answer: 0 },
-  { q: "面条", options: ["ข้าว", "ก๋วยเตี๋ยว", "ขนมปัง"], answer: 1 },
-  { q: "茶", options: ["กาแฟ", "น้ำชา", "น้ำผลไม้"], answer: 1 },
-  { q: "喜欢", options: ["ชอบ", "เกลียด", "กลัว"], answer: 0 },
-  { q: "猫", options: ["สุนัข", "แมว", "ปลา"], answer: 1 },
-  { q: "大", options: ["เล็ก", "ใหญ่", "ยาว"], answer: 1 },
-  { q: "小", options: ["ใหญ่", "เล็ก", "สูง"], answer: 1 },
-  { q: "几岁", options: ["อายุเท่าไหร่", "ชื่ออะไร", "อยู่ที่ไหน"], answer: 0 },
-  { q: "名字", options: ["ชื่อ", "อายุ", "โรงเรียน"], answer: 0 },
-  { q: "书", options: ["สมุด", "หนังสือ", "ดินสอ"], answer: 1 },
-  { q: "椅子", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 1 },
-  { q: "桌子", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 0 },
-  { q: "天气", options: ["เวลา", "อากาศ", "ฤดู"], answer: 1 },
-  { q: "今天", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 1 },
-  { q: "明天", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 2 }
+  { q: "你好吗 nǐhǎoma", options: ["สวัสดี", "สบายดีไหม", "ลาก่อน"], answer: 1 },
+  { q: "苹果 píngguǒ", options: ["ส้ม", "แอปเปิล", "กล้วย"], answer: 1 },
+  { q: "老师 lǎoshī", options: ["นักเรียน", "ครู", "เพื่อน"], answer: 1 },
+  { q: "狗 gǒu", options: ["แมว", "สุนัข", "ปลา"], answer: 1 },
+  { q: "水 shuǐ", options: ["น้ำ", "น้ำส้ม", "น้ำชา"], answer: 0 },
+  { q: "谢谢 xièxiè", options: ["ขอบคุณ", "ขอโทษ", "สวัสดี"], answer: 0 },
+  { q: "再见 zàijiàn", options: ["ลาก่อน", "ขอบคุณ", "ขอโทษ"], answer: 0 },
+  { q: "妈妈 māma", options: ["แม่", "พ่อ", "พี่ชาย"], answer: 0 },
+  { q: "爸爸 bàba", options: ["แม่", "พ่อ", "ลูกชาย"], answer: 1 },
+  { q: "中国 zhōngguó", options: ["ประเทศไทย", "จีน", "ญี่ปุ่น"], answer: 1 },
+  { q: "学校 xuéxiào", options: ["บ้าน", "โรงเรียน", "ร้านอาหาร"], answer: 1 },
+  { q: "学生 xuésheng", options: ["ครู", "เพื่อน", "นักเรียน"], answer: 2 },
+  { q: "老师好 lǎoshīhǎo", options: ["สวัสดีคุณครู", "ลาก่อน", "ขอโทษ"], answer: 0 },
+  { q: "我 wǒ", options: ["เธอ", "ฉัน", "เขา"], answer: 1 },
+  { q: "你 nǐ", options: ["ฉัน", "เธอ", "เขา"], answer: 1 },
+  { q: "他 tā", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "ฉัน"], answer: 1 },
+  { q: "她 tā", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "เรา"], answer: 0 },
+  { q: "朋友 péngyou", options: ["เพื่อน", "พี่ชาย", "ครู"], answer: 0 },
+  { q: "吃 chī", options: ["กิน", "ดื่ม", "นอน"], answer: 0 },
+  { q: "喝 hē", options: ["กิน", "ดื่ม", "เรียน"], answer: 1 },
+  { q: "米饭 mǐfàn", options: ["ข้าวสวย", "ข้าวผัด", "ก๋วยเตี๋ยว"], answer: 0 },
+  { q: "面条 miàntiáo", options: ["ข้าว", "ก๋วยเตี๋ยว", "ขนมปัง"], answer: 1 },
+  { q: "茶 chá", options: ["กาแฟ", "น้ำชา", "น้ำผลไม้"], answer: 1 },
+  { q: "喜欢 xǐhuan", options: ["ชอบ", "เกลียด", "กลัว"], answer: 0 },
+  { q: "猫 māo", options: ["สุนัข", "แมว", "ปลา"], answer: 1 },
+  { q: "大 dà", options: ["เล็ก", "ใหญ่", "ยาว"], answer: 1 },
+  { q: "小 xiǎo", options: ["ใหญ่", "เล็ก", "สูง"], answer: 1 },
+  { q: "几岁 jǐsuì", options: ["อายุเท่าไหร่", "ชื่ออะไร", "อยู่ที่ไหน"], answer: 0 },
+  { q: "名字 míngzi", options: ["ชื่อ", "อายุ", "โรงเรียน"], answer: 0 },
+  { q: "书 shū", options: ["สมุด", "หนังสือ", "ดินสอ"], answer: 1 },
+  { q: "椅子 yǐzi", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 1 },
+  { q: "桌子 zhuōzi", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 0 },
+  { q: "天气 tiānqì", options: ["เวลา", "อากาศ", "ฤดู"], answer: 1 },
+  { q: "今天 jīntiān", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 1 },
+  { q: "明天 míngtiān", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 2 }
 ];
 
 let currentQuestion = 0;
@@ -127,7 +127,7 @@ let score = 0;
 let questionTime = 90;
 let totalTime = quizData.length * questionTime;
 let timerInterval;
-let userAnswers = []; // เก็บคำตอบที่เลือก
+let userAnswers = [];
 
 function showQuestion() {
   clearInterval(timerInterval);
@@ -139,6 +139,7 @@ function showQuestion() {
   const questionEl = document.createElement('div');
   questionEl.className = 'question';
   questionEl.innerHTML = `<h3>ข้อ ${currentQuestion+1}: ${q.q}</h3>`;
+  
   const optionsDiv = document.createElement('div');
   optionsDiv.className = 'options';
   q.options.forEach((opt, index) => {
