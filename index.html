@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ข้อสอบจีน YCT 1 พร้อมจับเวลา</title> 
+<title>ข้อสอบจีน YCT 1 เเบบ Online</title> 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
   body { 
@@ -74,8 +74,8 @@
 </style>
 </head>
 <body>
-<h1>ข้อสอบจีน YCT 1 (จับเวลา 3 นาที/ข้อ)</h1>
-<div class="timer" id="timer">เหลือเวลา: 105:00 นาที</div>
+<h1>ข้อสอบจีน YCT 1 (จับเวลา 1 นาทีครึ่ง/ข้อ)</h1>
+<div class="timer" id="timer">เหลือเวลา: 52:30 นาที</div>
 <div id="quiz"></div>
 <script>
 const quizData = [
@@ -118,8 +118,8 @@ const quizData = [
 
 let currentQuestion = 0;
 let score = 0;
-let questionTime = 180; // 3 นาทีต่อข้อ
-let totalTime = 105 * 60; // รวม 105 นาที
+let questionTime = 90; // ⏱️ 1 นาที 30 วินาทีต่อข้อ
+let totalTime = 35 * 90; // รวม 52.5 นาที
 let timerInterval;
 
 function showQuestion() {
@@ -199,7 +199,7 @@ function showResult() {
   document.getElementById('timer').style.display = 'none';
 
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
-  if (score === quizData.length) {
+  if (score >=25) {
     resultText += ' 💯';
   } else if (score <= 34) {
     resultText += ' 😩';
@@ -212,7 +212,7 @@ function showResult() {
 function restartQuiz() {
   score = 0;
   currentQuestion = 0;
-  totalTime = 105 * 60;
+  totalTime = 35 * 90; // 52.5 นาที
   document.querySelector('h1').style.display = 'block';
   document.getElementById('timer').style.display = 'block';
   showQuestion();
