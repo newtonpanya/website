@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ข้อสอบจีน YCT 1 เเบบ Online</title> 
+<title>ข้อสอบจีน YCT 1 แบบ Online</title> 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
   body { 
@@ -59,9 +59,9 @@
     text-align: center;
     color: #FF4081;
   }
-  .restart-btn {
+  .restart-btn, .answer-btn {
     display: block;
-    margin: 20px auto;
+    margin: 15px auto;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
@@ -70,7 +70,22 @@
     font-size: 1rem;
     cursor: pointer;
   }
-  .restart-btn:hover { background-color: #FF8FAB; }
+  .restart-btn:hover, .answer-btn:hover { background-color: #FF8FAB; }
+  .answer-list {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .answer-item {
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .answer-item span {
+    color: #1565C0;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
@@ -118,8 +133,8 @@ const quizData = [
 
 let currentQuestion = 0;
 let score = 0;
-let questionTime = 90; // ⏱️ 1 นาที 30 วินาทีต่อข้อ
-let totalTime = 35 * 90; // รวม 52.5 นาที
+let questionTime = 90;
+let totalTime = quizData.length * questionTime;
 let timerInterval;
 
 function showQuestion() {
@@ -142,7 +157,6 @@ function showQuestion() {
   });
   questionEl.appendChild(optionsDiv);
   quizDiv.appendChild(questionEl);
-
   startQuestionTimer();
 }
 
@@ -199,20 +213,40 @@ function showResult() {
   document.getElementById('timer').style.display = 'none';
 
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
-  if (score >=25) {
+  if (score === quizData.length) {
     resultText += ' 💯';
-  } else if (score <= 34) {
+  } else if (score >= 25) {
+    resultText += ' 👍';
+  } else {
     resultText += ' 😩';
   }
 
   quizDiv.innerHTML = `<h2>${resultText}</h2>
     <button class="restart-btn" onclick="restartQuiz()">เริ่มทำใหม่อีกครั้ง</button>`;
+
+  if (score === quizData.length) {
+    const answerBtn = document.createElement('button');
+    answerBtn.className = 'answer-btn';
+    answerBtn.textContent = 'ดูเฉลยทั้งหมด 📘';
+    answerBtn.onclick = showAllAnswers;
+    quizDiv.appendChild(answerBtn);
+  }
+}
+
+function showAllAnswers() {
+  const quizDiv = document.getElementById('quiz');
+  let html = '<div class="answer-list">';
+  quizData.forEach((q, i) => {
+    html += `<div class="answer-item">ข้อ ${i+1}. ${q.q} → <span>${q.options[q.answer]}</span></div>`;
+  });
+  html += '</div>';
+  quizDiv.innerHTML += html;
 }
 
 function restartQuiz() {
   score = 0;
   currentQuestion = 0;
-  totalTime = 35 * 90; // 52.5 นาที
+  totalTime = quizData.length * questionTime;
   document.querySelector('h1').style.display = 'block';
   document.getElementById('timer').style.display = 'block';
   showQuestion();
