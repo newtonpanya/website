@@ -74,6 +74,8 @@
   .restart-btn:hover, .answer-btn:hover {
     background-color: #FF8FAB;
   }
+  .answer-correct { color: #2E7D32; font-weight: bold; } /* สีเขียว */
+  .answer-wrong { color: #C62828; font-weight: bold; }   /* สีแดง */
 </style>
 </head>
 <body>
@@ -125,6 +127,7 @@ let score = 0;
 let questionTime = 90;
 let totalTime = quizData.length * questionTime;
 let timerInterval;
+let userAnswers = []; // เก็บคำตอบที่เลือก
 
 function showQuestion() {
   clearInterval(timerInterval);
@@ -179,6 +182,7 @@ function checkAnswer(selected) {
     if (idx === selected && idx !== q.answer) btn.classList.add('wrong');
     btn.disabled = true;
   });
+  userAnswers[currentQuestion] = selected;
   if (selected === q.answer) score++;
   const nextBtn = document.createElement('button');
   nextBtn.className = 'next-btn';
@@ -210,7 +214,20 @@ function showAnswers() {
   const quizDiv = document.getElementById('quiz');
   let html = '<h2>เฉลยข้อสอบ 💡</h2>';
   quizData.forEach((q, i) => {
-    html += `<div class="question"><b>ข้อ ${i+1}:</b> ${q.q}<br>✅ คำตอบที่ถูกคือ: <b>${q.options[q.answer]}</b></div>`;
+    const user = userAnswers[i];
+    const correctAns = q.options[q.answer];
+    let colorClass = '';
+    if (user === q.answer) {
+      colorClass = 'answer-correct';
+    } else {
+      colorClass = 'answer-wrong';
+    }
+    html += `
+      <div class="question">
+        <b>ข้อ ${i+1}:</b> ${q.q}<br>
+        คำตอบของคุณ: <span class="${colorClass}">${q.options[user] || "ยังไม่ได้ตอบ"}</span><br>
+        ✅ คำตอบที่ถูกคือ: <b>${correctAns}</b>
+      </div>`;
   });
   html += `<button class="restart-btn" onclick="restartQuiz()">กลับไปทำใหม่</button>`;
   quizDiv.innerHTML = html;
@@ -220,6 +237,7 @@ function restartQuiz() {
   score = 0;
   currentQuestion = 0;
   totalTime = quizData.length * questionTime;
+  userAnswers = [];
   document.querySelector('h1').style.display = 'block';
   document.getElementById('timer').style.display = 'block';
   showQuestion();
