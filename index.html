@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ข้อสอบจีน YCT 1 แบบ Online</title> 
+<title>ข้อสอบจีน YCT 1 แบบ Online</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
-  body { 
-    font-family: 'Noto Sans SC', 'Microsoft JhengHei', Arial, sans-serif; 
-    padding: 20px; 
-    background: linear-gradient(135deg, #FFE6F7, #E3F2FD); 
+  body {
+    font-family: 'Noto Sans SC', 'Microsoft JhengHei', Arial, sans-serif;
+    padding: 20px;
+    background: linear-gradient(135deg, #FFE6F7, #E3F2FD);
     min-height: 100vh;
   }
   h1 {
@@ -23,35 +23,36 @@
     color: #1565C0;
     margin-bottom: 15px;
   }
-  .question { 
-    margin-bottom: 20px; 
-    padding: 20px; 
-    background: #fff; 
-    border-radius: 15px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+  .question {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
-  .options button { 
-    margin: 5px 10px 5px 0; 
-    padding: 10px 15px; 
-    border-radius: 10px; 
-    border: none; 
-    cursor: pointer; 
-    background-color: #FFD6E8; 
+  .options button {
+    margin: 5px 10px 5px 0;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #BBDEFB;
     transition: background-color 0.3s;
+    color: #0D47A1;
   }
   .options button:hover {
-    background-color: #FFB6C1;
+    background-color: #90CAF9;
   }
-  .correct { background-color: #81C784 !important; color: #fff; }
-  .wrong { background-color: #E57373 !important; color: #fff; }
-  .next-btn { 
-    margin-top: 15px; 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    border: none; 
-    background-color: #64B5F6; 
-    color: white; 
-    cursor: pointer; 
+  .correct { background-color: #81C784 !important; color: #fff !important; }
+  .wrong { background-color: #E57373 !important; color: #fff !important; }
+  .next-btn {
+    margin-top: 15px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    background-color: #64B5F6;
+    color: white;
+    cursor: pointer;
     font-size: 1rem;
   }
   .next-btn:hover { background-color: #42A5F5; }
@@ -70,21 +71,8 @@
     font-size: 1rem;
     cursor: pointer;
   }
-  .restart-btn:hover, .answer-btn:hover { background-color: #FF8FAB; }
-  .answer-list {
-    background: #fff;
-    border-radius: 12px;
-    padding: 15px;
-    margin-top: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  .answer-item {
-    margin-bottom: 8px;
-    font-size: 1rem;
-  }
-  .answer-item span {
-    color: #1565C0;
-    font-weight: bold;
+  .restart-btn:hover, .answer-btn:hover {
+    background-color: #FF8FAB;
   }
 </style>
 </head>
@@ -92,6 +80,7 @@
 <h1>ข้อสอบจีน YCT 1 (จับเวลา 1 นาทีครึ่ง/ข้อ)</h1>
 <div class="timer" id="timer">เหลือเวลา: 52:30 นาที</div>
 <div id="quiz"></div>
+
 <script>
 const quizData = [
   { q: "你好吗？", options: ["สวัสดี", "สบายดีไหม", "ลาก่อน"], answer: 1 },
@@ -157,6 +146,7 @@ function showQuestion() {
   });
   questionEl.appendChild(optionsDiv);
   quizDiv.appendChild(questionEl);
+
   startQuestionTimer();
 }
 
@@ -169,24 +159,15 @@ function startQuestionTimer() {
     const min = Math.floor(totalTime / 60);
     const sec = totalTime % 60;
     timerDisplay.textContent = `เหลือเวลา: ${min}:${sec.toString().padStart(2,'0')} นาที`;
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      nextQuestionAuto();
-    }
-    if (totalTime <= 0) {
-      clearInterval(timerInterval);
-      showResult();
-    }
+    if (timeLeft <= 0) nextQuestionAuto();
+    if (totalTime <= 0) showResult();
   }, 1000);
 }
 
 function nextQuestionAuto() {
+  clearInterval(timerInterval);
   currentQuestion++;
-  if (currentQuestion < quizData.length) {
-    showQuestion();
-  } else {
-    showResult();
-  }
+  showQuestion();
 }
 
 function checkAnswer(selected) {
@@ -194,14 +175,14 @@ function checkAnswer(selected) {
   const q = quizData[currentQuestion];
   const buttons = document.querySelectorAll('.options button');
   buttons.forEach((btn, idx) => {
-    if(idx === q.answer) btn.classList.add('correct');
-    if(idx === selected && idx !== q.answer) btn.classList.add('wrong');
+    if (idx === q.answer) btn.classList.add('correct');
+    if (idx === selected && idx !== q.answer) btn.classList.add('wrong');
     btn.disabled = true;
   });
-  if(selected === q.answer) score++;
+  if (selected === q.answer) score++;
   const nextBtn = document.createElement('button');
   nextBtn.className = 'next-btn';
-  nextBtn.innerText = currentQuestion < quizData.length-1 ? 'ข้อถัดไป' : 'จบข้อสอบ';
+  nextBtn.innerText = currentQuestion < quizData.length - 1 ? 'ข้อถัดไป' : 'จบข้อสอบ';
   nextBtn.onclick = nextQuestionAuto;
   document.getElementById('quiz').appendChild(nextBtn);
 }
@@ -209,38 +190,30 @@ function checkAnswer(selected) {
 function showResult() {
   clearInterval(timerInterval);
   const quizDiv = document.getElementById('quiz');
-  document.querySelector('h1').style.display = 'none'; 
+  document.querySelector('h1').style.display = 'none';
   document.getElementById('timer').style.display = 'none';
 
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
-  if (score === quizData.length) {
+  let buttons = `<button class="restart-btn" onclick="restartQuiz()">เริ่มทำใหม่อีกครั้ง</button>`;
+  
+  if (score >= 25) {
     resultText += ' 💯';
-  } else if (score >= 25) {
-    resultText += ' 👍';
+    buttons += `<button class="answer-btn" onclick="showAnswers()">ดูเฉลย</button>`;
   } else {
     resultText += ' 😩';
   }
 
-  quizDiv.innerHTML = `<h2>${resultText}</h2>
-    <button class="restart-btn" onclick="restartQuiz()">เริ่มทำใหม่อีกครั้ง</button>`;
-
-  if (score === quizData.length) {
-    const answerBtn = document.createElement('button');
-    answerBtn.className = 'answer-btn';
-    answerBtn.textContent = 'ดูเฉลยทั้งหมด 📘';
-    answerBtn.onclick = showAllAnswers;
-    quizDiv.appendChild(answerBtn);
-  }
+  quizDiv.innerHTML = `<h2>${resultText}</h2>${buttons}`;
 }
 
-function showAllAnswers() {
+function showAnswers() {
   const quizDiv = document.getElementById('quiz');
-  let html = '<div class="answer-list">';
+  let html = '<h2>เฉลยข้อสอบ 💡</h2>';
   quizData.forEach((q, i) => {
-    html += `<div class="answer-item">ข้อ ${i+1}. ${q.q} → <span>${q.options[q.answer]}</span></div>`;
+    html += `<div class="question"><b>ข้อ ${i+1}:</b> ${q.q}<br>✅ คำตอบที่ถูกคือ: <b>${q.options[q.answer]}</b></div>`;
   });
-  html += '</div>';
-  quizDiv.innerHTML += html;
+  html += `<button class="restart-btn" onclick="restartQuiz()">กลับไปทำใหม่</button>`;
+  quizDiv.innerHTML = html;
 }
 
 function restartQuiz() {
