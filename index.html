@@ -189,11 +189,44 @@ function enterTeacherMode(){
 function teacherPanel(){
   const quizDiv = document.getElementById('quiz');
   let html = '<h2>🧑‍🏫 โหมดครู</h2>';
-  html += '<p>ลบ Leaderboard ทีละบันทึกได้ทั้ง YCT 1 และ YCT 2</p>';
+  html += '<p>สามารถเพิ่ม/ลบ Leaderboard YCT 1 และ YCT 2 ได้</p>';
+  html += `<button class='add-btn' onclick='addScoreYCT1()'>➕ เพิ่มบันทึก YCT 1</button>`;
   html += `<button class='delete-btn' onclick='deleteSingleYCT1()'>🗑️ ลบบันทึก YCT 1</button>`;
+  html += `<button class='add-btn' onclick='addScoreYCT2()'>➕ เพิ่มบันทึก YCT 2</button>`;
   html += `<button class='delete-btn' onclick='deleteSingleYCT2()'>🗑️ ลบบันทึก YCT 2</button>`;
   html += `<button class='restart-btn' onclick='openLeaderboard()'>กลับไปดู Leaderboard</button>`;
   quizDiv.innerHTML = html;
+}
+
+// --------------------- เพิ่มบันทึก ---------------------
+function addScoreYCT1(){
+  const percent = prompt("กรอกคะแนน YCT 1 (0-100):");
+  if(percent === null) return;
+  const p = Number(percent);
+  if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+  const key = 'yct_leaderboard_v1';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data['yct1']) data['yct1'] = {};
+  const now = new Date().toLocaleString('th-TH');
+  data['yct1'][now] = p;
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("เพิ่มบันทึก YCT 1 เรียบร้อย ✅");
+  teacherPanel();
+}
+
+function addScoreYCT2(){
+  const percent = prompt("กรอกคะแนน YCT 2 (0-100):");
+  if(percent === null) return;
+  const p = Number(percent);
+  if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+  const key = 'yct_leaderboard_v1';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data['yct2']) data['yct2'] = {};
+  const now = new Date().toLocaleString('th-TH');
+  data['yct2'][now] = p;
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("เพิ่มบันทึก YCT 2 เรียบร้อย ✅");
+  teacherPanel();
 }
 
 // --------------------- ลบทีละบันทึก ---------------------
