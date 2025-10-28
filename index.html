@@ -131,13 +131,17 @@ function selectAnswer(choice) {
   setTimeout(()=>{ currentIndex++; showQuestion(); }, 1000);
 }
 
-// --------------------- แสดงผลคะแนน ---------------------
+// --------------------- แสดงผลคะแนน และถามชื่อ ---------------------
 function showResult() {
   clearInterval(timer);
   const quizDiv = document.getElementById('quiz');
   const total = currentExam === 'yct1' ? yct1.length : yct2.length;
   const percent = Math.round((score/total)*100);
   const emoji = percent >= 80 ? '💯' : (percent >= 50 ? '😊' : '😢');
+
+  const studentName = prompt("กรุณากรอกชื่อของคุณ:") || "ไม่ระบุ";
+  saveScore(percent, studentName);
+
   let html = `<h2>คุณได้ ${score}/${total} คะแนน ${emoji}</h2>`;
   if(currentExam==='yct1'){
     html += `<button class='toYCT2-btn' onclick="startQuiz('yct2')">ไปทำ YCT 2 ➡️</button>`;
@@ -145,29 +149,28 @@ function showResult() {
   html += `<button class='leaderboard-btn' onclick='openLeaderboard()'>Leaderboard</button>
            <button class='restart-btn' onclick="startQuiz('${currentExam}')">ทำใหม่</button>`;
   quizDiv.innerHTML = html;
-  saveScore(percent);
 }
 
-// --------------------- บันทึกคะแนน ---------------------
-function saveScore(percent){
-  const key = 'yct_leaderboard_v1';
+// --------------------- บันทึกคะแนน พร้อมชื่อและเวลา ---------------------
+function saveScore(percent, name){
+  const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data[currentExam]) data[currentExam] = [];
   const now = new Date().toLocaleString('th-TH');
-  if(!data[currentExam]) data[currentExam] = {};
-  data[currentExam][now] = percent;
+  data[currentExam].push({name, score: percent, time: now});
   localStorage.setItem(key, JSON.stringify(data));
 }
 
 // --------------------- Leaderboard ---------------------
 function openLeaderboard(){
   const quizDiv = document.getElementById('quiz');
-  const data = JSON.parse(localStorage.getItem('yct_leaderboard_v1')||'{}');
+  const data = JSON.parse(localStorage.getItem('yct_leaderboard_v2')||'{}');
   let html = '<h2>🏆 Leaderboard</h2>';
   ['yct1','yct2'].forEach(ex=>{
     html += `<h3>${ex.toUpperCase()}</h3>`;
-    const entries = data[ex] ? Object.entries(data[ex]).sort((a,b)=>b[1]-a[1]).slice(0,10) : [];
+    const entries = data[ex] ? data[ex].sort((a,b)=>b.score-a.score).slice(0,10) : [];
     if(entries.length===0) html += '<p>ยังไม่มีข้อมูล</p>';
-    else html += entries.map(([d,s])=>`<div>${d} — ${s}%</div>`).join('');
+    else html += entries.map(e=>`<div>${e.name} — ${e.time} — ${e.score}%</div>`).join('');
   });
   html += `<button class='teacher-btn' onclick='enterTeacherMode()'>โหมดครู 🧑‍🏫</button>`;
   html += `<button class='restart-btn' onclick="startQuiz('yct1')">กลับไปทำข้อสอบ</button>`;
@@ -200,30 +203,32 @@ function teacherPanel(){
 
 // --------------------- เพิ่มบันทึก ---------------------
 function addScoreYCT1(){
+  const name = prompt("กรอกชื่อผู้ทำ YCT 1:") || "ไม่ระบุ";
   const percent = prompt("กรอกคะแนน YCT 1 (0-100):");
   if(percent === null) return;
   const p = Number(percent);
   if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-  const key = 'yct_leaderboard_v1';
+  const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct1']) data['yct1'] = {};
+  if(!data['yct1']) data['yct1'] = [];
   const now = new Date().toLocaleString('th-TH');
-  data['yct1'][now] = p;
+  data['yct1'].push({name, score: p, time: now});
   localStorage.setItem(key, JSON.stringify(data));
   alert("เพิ่มบันทึก YCT 1 เรียบร้อย ✅");
   teacherPanel();
 }
 
 function addScoreYCT2(){
+  const name = prompt("กรอกชื่อผู้ทำ YCT 2:") || "ไม่ระบุ";
   const percent = prompt("กรอกคะแนน YCT 2 (0-100):");
   if(percent === null) return;
   const p = Number(percent);
   if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-  const key = 'yct_leaderboard_v1';
+  const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct2']) data['yct2'] = {};
+  if(!data['yct2']) data['yct2'] = [];
   const now = new Date().toLocaleString('th-TH');
-  data['yct2'][now] = p;
+  data['yct2'].push({name, score: p, time: now});
   localStorage.setItem(key, JSON.stringify(data));
   alert("เพิ่มบันทึก YCT 2 เรียบร้อย ✅");
   teacherPanel();
@@ -231,34 +236,32 @@ function addScoreYCT2(){
 
 // --------------------- ลบทีละบันทึก ---------------------
 function deleteSingleYCT1(){
-  const key = 'yct_leaderboard_v1';
+  const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct1'] || Object.keys(data['yct1']).length === 0){
+  if(!data['yct1'] || data['yct1'].length === 0){
     return alert("ไม่มีบันทึก YCT 1 ให้ลบ ❌");
   }
-  let list = Object.entries(data['yct1']).map(([k,v],i)=>`${i+1}. ${k} — ${v}%`).join("\n");
+  let list = data['yct1'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
   let index = prompt("เลือกบันทึกที่จะลบ YCT 1:\n"+list+"\nกรอกหมายเลข:");
   index = Number(index)-1;
-  if(index<0 || index>=Object.keys(data['yct1']).length) return alert("หมายเลขไม่ถูกต้อง");
-  const keyToDelete = Object.keys(data['yct1'])[index];
-  delete data['yct1'][keyToDelete];
+  if(index<0 || index>=data['yct1'].length) return alert("หมายเลขไม่ถูกต้อง");
+  data['yct1'].splice(index,1);
   localStorage.setItem(key, JSON.stringify(data));
   alert("ลบบันทึก YCT 1 เรียบร้อย ✅");
   teacherPanel();
 }
 
 function deleteSingleYCT2(){
-  const key = 'yct_leaderboard_v1';
+  const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct2'] || Object.keys(data['yct2']).length === 0){
+  if(!data['yct2'] || data['yct2'].length === 0){
     return alert("ไม่มีบันทึก YCT 2 ให้ลบ ❌");
   }
-  let list = Object.entries(data['yct2']).map(([k,v],i)=>`${i+1}. ${k} — ${v}%`).join("\n");
+  let list = data['yct2'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
   let index = prompt("เลือกบันทึกที่จะลบ YCT 2:\n"+list+"\nกรอกหมายเลข:");
   index = Number(index)-1;
-  if(index<0 || index>=Object.keys(data['yct2']).length) return alert("หมายเลขไม่ถูกต้อง");
-  const keyToDelete = Object.keys(data['yct2'])[index];
-  delete data['yct2'][keyToDelete];
+  if(index<0 || index>=data['yct2'].length) return alert("หมายเลขไม่ถูกต้อง");
+  data['yct2'].splice(index,1);
   localStorage.setItem(key, JSON.stringify(data));
   alert("ลบบันทึก YCT 2 เรียบร้อย ✅");
   teacherPanel();
