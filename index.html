@@ -176,13 +176,13 @@ function openLeaderboard(){
 
 // --------------------- โหมดครู ---------------------
 function enterTeacherMode(){
-  const email = prompt("กรอกอีเมลครูเพื่อเข้าสู่โหมดควบคุม:");
-  if(email === "newton_panya@gmail.com"){
+  const email = prompt("กรอกรหัสครูเพื่อเข้าสู่โหมดควบคุม:");
+  if(password === "2222"){
     isTeacher = true;
     alert("เข้าสู่โหมดครูเรียบร้อย ✅");
     teacherPanel();
   } else {
-    alert("❌ อีเมลไม่ถูกต้อง! เฉพาะครูเท่านั้นที่เข้าถึงได้");
+    alert("❌ รหัสไม่ถูกต้อง! เฉพาะครูเท่านั้นที่เข้าถึงได้");
   }
 }
 
