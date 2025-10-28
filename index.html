@@ -9,8 +9,7 @@
   body {
     font-family: 'Noto Sans SC', 'Microsoft JhengHei', Arial, sans-serif;
     padding: 20px;
-    /* 👇 พื้นหลังธงชาติจีน 🇨🇳 */
-    background: 
+    background:
       linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
       url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
     background-size: cover;
@@ -19,19 +18,8 @@
     min-height: 100vh;
   }
 
-  h1 {
-    text-align: center;
-    color: #D32F2F;
-    text-shadow: 1px 1px 2px #fff;
-  }
-
-  .timer {
-    text-align: center;
-    font-size: 1.3rem;
-    color: #B71C1C;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
+  h1 { text-align: center; color: #D32F2F; text-shadow: 1px 1px 2px #fff; }
+  .timer { text-align: center; font-size: 1.3rem; color: #B71C1C; margin-bottom: 15px; font-weight: bold; }
 
   .question {
     margin-bottom: 20px;
@@ -52,44 +40,40 @@
     color: #B71C1C;
   }
   .options button:hover { background-color: #EF9A9A; }
-
   .correct { background-color: #81C784 !important; color: #fff !important; }
   .wrong { background-color: #E57373 !important; color: #fff !important; }
 
-  .next-btn {
-    margin-top: 15px;
+  .next-btn, .back-btn, .restart-btn, .answer-btn {
+    margin: 15px auto;
     padding: 10px 18px;
     border-radius: 10px;
     border: none;
     background-color: #F44336;
     color: white;
     cursor: pointer;
-    font-size: 1rem;
-  }
-  .next-btn:hover { background-color: #D32F2F; }
-
-  h2 {
-    text-align: center;
-    color: #C62828;
-  }
-
-  .restart-btn, .answer-btn {
     display: block;
-    margin: 15px auto;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    background-color: #FF5252;
-    color: white;
     font-size: 1rem;
-    cursor: pointer;
   }
-  .restart-btn:hover, .answer-btn:hover {
-    background-color: #E53935;
-  }
+  .next-btn:hover, .back-btn:hover, .restart-btn:hover, .answer-btn:hover { background-color: #D32F2F; }
 
+  h2 { text-align: center; color: #C62828; }
   .answer-correct { color: #2E7D32; font-weight: bold; }
   .answer-wrong { color: #C62828; font-weight: bold; }
+
+  .question-link {
+    display: inline-block;
+    background-color: #FFEBEE;
+    color: #B71C1C;
+    margin: 4px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #E57373;
+  }
+  .question-link:hover {
+    background-color: #EF9A9A;
+    color: white;
+  }
 </style>
 </head>
 <body>
@@ -109,31 +93,6 @@ const quizData = [
   { q: "妈妈 māma", options: ["แม่", "พ่อ", "พี่ชาย"], answer: 0 },
   { q: "爸爸 bàba", options: ["แม่", "พ่อ", "ลูกชาย"], answer: 1 },
   { q: "中国 zhōngguó", options: ["ประเทศไทย", "จีน", "ญี่ปุ่น"], answer: 1 },
-  { q: "学校 xuéxiào", options: ["บ้าน", "โรงเรียน", "ร้านอาหาร"], answer: 1 },
-  { q: "学生 xuésheng", options: ["ครู", "เพื่อน", "นักเรียน"], answer: 2 },
-  { q: "老师好 lǎoshīhǎo", options: ["สวัสดีคุณครู", "ลาก่อน", "ขอโทษ"], answer: 0 },
-  { q: "我 wǒ", options: ["เธอ", "ฉัน", "เขา"], answer: 1 },
-  { q: "你 nǐ", options: ["ฉัน", "เธอ", "เขา"], answer: 1 },
-  { q: "他 tā", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "ฉัน"], answer: 1 },
-  { q: "她 tā", options: ["เธอ (ผู้หญิง)", "เขา (ผู้ชาย)", "เรา"], answer: 0 },
-  { q: "朋友 péngyou", options: ["เพื่อน", "พี่ชาย", "ครู"], answer: 0 },
-  { q: "吃 chī", options: ["กิน", "ดื่ม", "นอน"], answer: 0 },
-  { q: "喝 hē", options: ["กิน", "ดื่ม", "เรียน"], answer: 1 },
-  { q: "米饭 mǐfàn", options: ["ข้าวสวย", "ข้าวผัด", "ก๋วยเตี๋ยว"], answer: 0 },
-  { q: "面条 miàntiáo", options: ["ข้าว", "ก๋วยเตี๋ยว", "ขนมปัง"], answer: 1 },
-  { q: "茶 chá", options: ["กาแฟ", "น้ำชา", "น้ำผลไม้"], answer: 1 },
-  { q: "喜欢 xǐhuan", options: ["ชอบ", "เกลียด", "กลัว"], answer: 0 },
-  { q: "猫 māo", options: ["สุนัข", "แมว", "ปลา"], answer: 1 },
-  { q: "大 dà", options: ["เล็ก", "ใหญ่", "ยาว"], answer: 1 },
-  { q: "小 xiǎo", options: ["ใหญ่", "เล็ก", "สูง"], answer: 1 },
-  { q: "几岁 jǐsuì", options: ["อายุเท่าไหร่", "ชื่ออะไร", "อยู่ที่ไหน"], answer: 0 },
-  { q: "名字 míngzi", options: ["ชื่อ", "อายุ", "โรงเรียน"], answer: 0 },
-  { q: "书 shū", options: ["สมุด", "หนังสือ", "ดินสอ"], answer: 1 },
-  { q: "椅子 yǐzi", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 1 },
-  { q: "桌子 zhuōzi", options: ["โต๊ะ", "เก้าอี้", "เตียง"], answer: 0 },
-  { q: "天气 tiānqì", options: ["เวลา", "อากาศ", "ฤดู"], answer: 1 },
-  { q: "今天 jīntiān", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 1 },
-  { q: "明天 míngtiān", options: ["เมื่อวาน", "วันนี้", "พรุ่งนี้"], answer: 2 }
 ];
 
 let currentQuestion = 0;
@@ -142,6 +101,7 @@ let questionTime = 90;
 let totalTime = quizData.length * questionTime;
 let timerInterval;
 let userAnswers = [];
+let answerTimes = []; // 🕒 เก็บเวลาตอบแต่ละข้อ
 
 function showQuestion() {
   clearInterval(timerInterval);
@@ -198,6 +158,7 @@ function checkAnswer(selected) {
     btn.disabled = true;
   });
   userAnswers[currentQuestion] = selected;
+  answerTimes[currentQuestion] = new Date().toLocaleTimeString(); // บันทึกเวลา
   if (selected === q.answer) score++;
   const nextBtn = document.createElement('button');
   nextBtn.className = 'next-btn';
@@ -215,7 +176,7 @@ function showResult() {
   let resultText = `คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
   let buttons = `<button class="restart-btn" onclick="restartQuiz()">เริ่มทำใหม่อีกครั้ง</button>`;
   
-  if (score >= 25) {
+  if (score >= 5) {
     resultText += ' 💯';
     buttons += `<button class="answer-btn" onclick="showAnswers()">ดูเฉลย</button>`;
   } else {
@@ -228,19 +189,46 @@ function showResult() {
 function showAnswers() {
   const quizDiv = document.getElementById('quiz');
   let html = '<h2>เฉลยข้อสอบ 💡</h2>';
+  
+  // ลิงก์คลิกไปยังแต่ละข้อ
+  html += '<div style="text-align:center">';
+  quizData.forEach((_, i) => {
+    html += `<span class="question-link" onclick="showSingleAnswer(${i})">ข้อ ${i+1}</span>`;
+  });
+  html += '</div><hr>';
+
   quizData.forEach((q, i) => {
     const user = userAnswers[i];
     const correctAns = q.options[q.answer];
     let colorClass = user === q.answer ? 'answer-correct' : 'answer-wrong';
     html += `
-      <div class="question">
+      <div id="answer-${i}" class="question">
         <b>ข้อ ${i+1}:</b> ${q.q}<br>
+        ⏱️ เวลาคลิกตอบ: <i>${answerTimes[i] || "-"}</i><br>
         คำตอบของคุณ: <span class="${colorClass}">${q.options[user] || "ยังไม่ได้ตอบ"}</span><br>
         ✅ คำตอบที่ถูกคือ: <b>${correctAns}</b>
       </div>`;
   });
+
   html += `<button class="restart-btn" onclick="restartQuiz()">กลับไปทำใหม่</button>`;
   quizDiv.innerHTML = html;
+}
+
+function showSingleAnswer(index) {
+  const quizDiv = document.getElementById('quiz');
+  const q = quizData[index];
+  const user = userAnswers[index];
+  const correctAns = q.options[q.answer];
+  let colorClass = user === q.answer ? 'answer-correct' : 'answer-wrong';
+  quizDiv.innerHTML = `
+    <div class="question">
+      <h3>ข้อ ${index+1}: ${q.q}</h3>
+      ⏱️ เวลาคลิกตอบ: <i>${answerTimes[index] || "-"}</i><br><br>
+      คำตอบของคุณ: <span class="${colorClass}">${q.options[user] || "ยังไม่ได้ตอบ"}</span><br>
+      ✅ คำตอบที่ถูกคือ: <b>${correctAns}</b>
+    </div>
+    <button class="back-btn" onclick="showAnswers()">กลับไปที่เฉลยทั้งหมด</button>
+  `;
 }
 
 function restartQuiz() {
@@ -248,6 +236,7 @@ function restartQuiz() {
   currentQuestion = 0;
   totalTime = quizData.length * questionTime;
   userAnswers = [];
+  answerTimes = [];
   document.querySelector('h1').style.display = 'block';
   document.getElementById('timer').style.display = 'block';
   showQuestion();
