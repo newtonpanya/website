@@ -204,15 +204,18 @@ function teacherPanel(){
 // --------------------- เพิ่มบันทึก ---------------------
 function addScoreYCT1(){
   const name = prompt("กรอกชื่อผู้ทำ YCT 1:") || "ไม่ระบุ";
-  const percent = prompt("กรอกคะแนน YCT 1 (0-100):");
-  if(percent === null) return;
-  const p = Number(percent);
-  if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+  const percentStr = prompt("กรอกคะแนน YCT 1 (0-100):");
+  if(percentStr === null) return;
+  const percent = Number(percentStr);
+  if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+
+  let time = prompt("กรอกวันที่/เวลาที่ทำ (ปล่อยว่างใช้เวลาปัจจุบัน):");
+  if(!time) time = new Date().toLocaleString('th-TH');
+
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
   if(!data['yct1']) data['yct1'] = [];
-  const now = new Date().toLocaleString('th-TH');
-  data['yct1'].push({name, score: p, time: now});
+  data['yct1'].push({name, score: percent, time});
   localStorage.setItem(key, JSON.stringify(data));
   alert("เพิ่มบันทึก YCT 1 เรียบร้อย ✅");
   teacherPanel();
@@ -220,15 +223,18 @@ function addScoreYCT1(){
 
 function addScoreYCT2(){
   const name = prompt("กรอกชื่อผู้ทำ YCT 2:") || "ไม่ระบุ";
-  const percent = prompt("กรอกคะแนน YCT 2 (0-100):");
-  if(percent === null) return;
-  const p = Number(percent);
-  if(isNaN(p) || p<0 || p>100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+  const percentStr = prompt("กรอกคะแนน YCT 2 (0-100):");
+  if(percentStr === null) return;
+  const percent = Number(percentStr);
+  if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
+
+  let time = prompt("กรอกวันที่/เวลาที่ทำ (ปล่อยว่างใช้เวลาปัจจุบัน):");
+  if(!time) time = new Date().toLocaleString('th-TH');
+
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
   if(!data['yct2']) data['yct2'] = [];
-  const now = new Date().toLocaleString('th-TH');
-  data['yct2'].push({name, score: p, time: now});
+  data['yct2'].push({name, score: percent, time});
   localStorage.setItem(key, JSON.stringify(data));
   alert("เพิ่มบันทึก YCT 2 เรียบร้อย ✅");
   teacherPanel();
