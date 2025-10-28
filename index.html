@@ -1,526 +1,233 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ข้อสอบจีน YCT 1 & 2 แบบ Online 🇨🇳</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YCT Online Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --red:#D32F2F; --dark-red:#B71C1C; --soft:#FFEBEE;
-  }
-  body{
-    font-family:'Noto Sans SC','Microsoft JhengHei',Arial,sans-serif;
-    margin:0; padding:20px;
-    background:
-      linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
-      url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
-    background-size:cover; background-position:center; min-height:100vh;
-  }
-  header{ text-align:center; margin-bottom:10px; }
-  h1{ color:var(--red); margin:4px 0; text-shadow:1px 1px 2px #fff; }
-  .topbar{ display:flex; gap:10px; justify-content:center; margin:8px 0 18px;}
-  .btn{ padding:8px 14px; border-radius:10px; border:none; cursor:pointer; background:var(--red); color:#fff; }
-  .btn.secondary{ background:#FF8A80; color:#400; }
-  .container{ max-width:980px; margin:0 auto; }
-  .quiz-card{ background:rgba(255,255,255,0.95); padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.12);}
-  .timer{ text-align:center; font-weight:700; color:var(--dark-red); margin-bottom:8px; }
-  .question{ margin-bottom:16px; padding:14px; background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
-  .q-title{ font-size:1.05rem; margin-bottom:8px; color:#333; }
-  .pinyin{ color:#666; font-style:italic; margin-bottom:6px; display:block;}
-  .options{ display:flex; flex-wrap:wrap; gap:8px; }
-  .options button{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:#FFCDD2; color:var(--dark-red); }
-  .options button.correct{ background:#66BB6A; color:#fff; }
-  .options button.wrong{ background:#E57373; color:#fff; }
-  .nav-area{ display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
-  .result{ text-align:center; }
-  .question-links{ text-align:center; margin:10px 0; }
-  .qlink{ display:inline-block; margin:3px; padding:6px 10px; border-radius:8px; background:#FFF3F3; color:var(--dark-red); cursor:pointer; border:1px solid #F4C2C2; }
-  .leaderboard{ margin-top:16px; padding:12px; background:#FFF8E1; border-radius:10px; }
-  .lb-row{ display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #eee; }
-  footer{ text-align:center; margin-top:18px; color:#500; }
-  /* responsive */
-  @media(max-width:600px){
-    .options{ flex-direction:column; }
-  }
+  body { font-family: 'Noto Sans SC', Arial, sans-serif; padding: 20px; min-height: 100vh;
+         background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+                     url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
+         background-size: cover; background-position: center; background-attachment: fixed;}
+  h1 { text-align:center; color:#D32F2F; text-shadow:1px 1px 2px #fff; }
+  .timer { text-align:center; font-size:1.3rem; color:#B71C1C; margin-bottom:15px; font-weight:bold;}
+  .question { margin-bottom:20px; padding:20px; background:rgba(255,255,255,0.9); border-radius:15px;
+             box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+  .options button { margin:5px 10px 5px 0; padding:10px 15px; border-radius:10px; border:none;
+                    cursor:pointer; background-color:#FFCDD2; transition:0.3s; color:#B71C1C;}
+  .options button:hover { background-color:#EF9A9A; }
+  .correct { background-color:#81C784 !important; color:#fff !important; }
+  .wrong { background-color:#E57373 !important; color:#fff !important; }
+  .next-btn { margin-top:15px; padding:10px 18px; border-radius:10px; border:none;
+              background-color:#F44336; color:white; cursor:pointer; font-size:1rem;}
+  .next-btn:hover { background-color:#D32F2F; }
+  .restart-btn, .answer-btn, .toYCT2-btn, .leaderboard-btn { display:block; margin:15px auto;
+              padding:10px 20px; border:none; border-radius:10px; background-color:#FF5252;
+              color:white; font-size:1rem; cursor:pointer; }
+  .restart-btn:hover, .answer-btn:hover, .toYCT2-btn:hover, .leaderboard-btn:hover { background-color:#E53935; }
+  .answer-correct { color:#2E7D32; font-weight:bold; } .answer-wrong { color:#C62828; font-weight:bold; }
+  h2 { text-align:center; color:#C62828; }
+  .footer { text-align:center; margin-top:20px; font-size:0.9rem; color:#333;}
 </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>ข้อสอบจีน YCT 1 &amp; 2 แบบ Online 🇨🇳</h1>
-      <div class="topbar">
-        <button class="btn" onclick="startExam('yct1')">เริ่ม YCT 1 (35 ข้อ)</button>
-        <button class="btn secondary" onclick="startExam('yct2')">เริ่ม YCT 2 (40 ข้อ)</button>
-        <button class="btn" onclick="openLeaderboard()">Leaderboard</button>
-      </div>
-    </header>
-
-    <main id="mainArea" class="quiz-card">
-      <div id="intro">
-        <p>ยินดีต้อนรับ! เลือกเริ่มข้อสอบด้านบน หรืออ่านคำแนะนำสั้น ๆ ก่อน:</p>
-        <ul>
-          <li>แต่ละข้อมีเวลา <strong>90 วินาที</strong> หากหมดเวลาจะข้ามไปข้อถัดไปอัตโนมัติ</li>
-          <li>คำถามแสดง <strong>จีน + พินอิน</strong> และตัวเลือกเป็นภาษาไทย</li>
-          <li>เมื่อทำ YCT1 เสร็จจะมีปุ่มให้ไป YCT2 ได้ทันที</li>
-          <li>Leaderboard จะเก็บคะแนนสูงสุด (Max) ของแต่ละชื่อ แยก YCT1/YCT2</li>
-        </ul>
-      </div>
-
-      <div id="quizArea" style="display:none;">
-        <div class="timer" id="timerDisplay">เหลือเวลา: --:--</div>
-        <div id="questionWrapper"></div>
-        <div class="nav-area">
-          <button class="btn secondary" id="prevBtn" onclick="prevQuestion()" style="display:none">ข้อก่อนหน้า</button>
-          <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none">ข้อถัดไป</button>
-          <button class="btn" id="finishBtn" onclick="finishExam()" style="display:none">ส่งคำตอบ / จบข้อสอบ</button>
-        </div>
-      </div>
-
-      <div id="resultArea" style="display:none;"></div>
-
-      <div id="leaderboardArea" style="display:none;"></div>
-    </main>
-
-    <footer>
-      สร้างโดย · เว็บทดสอบ YCT · เก็บคะแนนด้วย LocalStorage
-    </footer>
-  </div>
+<h1>YCT Online Quiz 🇨🇳</h1>
+<div class="timer" id="timer"></div>
+<div id="quiz"></div>
+<div class="footer">
+  <div>Website: <a href="https://newtonpanya.studio" target="_blank">newtonpanya.studio</a></div>
+  <div>Email: <a href="mailto:newton_panya@gmail.com">newton_panya@gmail.com</a></div>
+</div>
 
 <script>
-/* ===================== ข้อมูลคำถาม =====================
-   แต่ละคำถามมี: text (จีน), pinyin, options (array thai), answer (index)
-   -- ผมสร้างตัวอย่างคำถามจริงสำหรับ YCT1 (35 ข้อ) และ YCT2 (40 ข้อ)
-   -- คุณสามารถแก้/เพิ่มคำถามได้ที่ตัวแปร yct1Questions / yct2Questions
-*/
-
-const yct1Questions = [
-  {text:"你好吗", pinyin:"Nǐ hǎo ma?", options:["สวัสดี","สบายดีไหม","ลาก่อน"], answer:1},
-  {text:"我很好", pinyin:"Wǒ hěn hǎo.", options:["ฉันไม่ดี","ฉันสบายดี","ฉันเหนื่อย"], answer:1},
-  {text:"谢谢", pinyin:"Xièxie.", options:["ขอบคุณ","ขอโทษ","ไม่เป็นไร"], answer:0},
-  {text:"不客气", pinyin:"Bú kèqi.", options:["ไม่เป็นไร","ขอโทษ","ช่วยด้วย"], answer:0},
-  {text:"再见", pinyin:"Zàijiàn.", options:["สวัสดี","ลาก่อน","ค่อยเจอกัน"], answer:1},
-  {text:"我叫...", pinyin:"Wǒ jiào ...", options:["ฉันชื่อ...","ฉันอยู่...","ฉันไป..."], answer:0},
-  {text:"你叫什么名字", pinyin:"Nǐ jiào shénme míngzi?", options:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณอายุเท่าไหร่"], answer:1},
-  {text:"几岁", pinyin:"Jǐ suì?", options:["กี่โมง","กี่ปี/อายุเท่าไหร่","ชื่ออะไร"], answer:1},
-  {text:"我八岁", pinyin:"Wǒ bā suì.", options:["ฉันแปดขวบ","ฉันหกขวบ","ฉันยี่สิบ"], answer:0},
-  {text:"妈妈", pinyin:"Māma", options:["พ่อ","แม่","พี่"], answer:1},
-  {text:"爸爸", pinyin:"Bàba", options:["พ่อ","ลูก","ครู"], answer:0},
-  {text:"老师", pinyin:"Lǎoshī", options:["นักเรียน","ครู","เพื่อน"], answer:1},
-  {text:"学生", pinyin:"Xuésheng", options:["ครู","นักเรียน","พ่อแม่"], answer:1},
-  {text:"学校", pinyin:"Xuéxiào", options:["โรงเรียน","บ้าน","ตลาด"], answer:0},
-  {text:"中国", pinyin:"Zhōngguó", options:["จีน","ญี่ปุ่น","เกาหลี"], answer:0},
-  {text:"美国", pinyin:"Měiguó", options:["อังกฤษ","อเมริกา","แคนาดา"], answer:1},
-  {text:"苹果", pinyin:"Píngguǒ", options:["แอปเปิล","กล้วย","ส้ม"], answer:0},
-  {text:"香蕉", pinyin:"Xiāngjiāo", options:["ส้ม","กล้วย","องุ่น"], answer:1},
-  {text:"水", pinyin:"Shuǐ", options:["น้ำ","ชา","นม"], answer:0},
-  {text:"茶", pinyin:"Chá", options:["กาแฟ","ชา","น้ำส้ม"], answer:1},
-  {text:"吃", pinyin:"Chī", options:["กิน","ดื่ม","นอน"], answer:0},
-  {text:"喝", pinyin:"Hē", options:["กิน","ดื่ม","วิ่ง"], answer:1},
-  {text:"喜欢", pinyin:"Xǐhuan", options:["ชอบ","เกลียด","กลัว"], answer:0},
-  {text:"猫", pinyin:"Māo", options:["สุนัข","แมว","ปลา"], answer:1},
-  {text:"狗", pinyin:"Gǒu", options:["แมว","หมา/สุนัข","นก"], answer:1},
-  {text:"书", pinyin:"Shū", options:["หนังสือ","ปากกา","กระเป๋า"], answer:0},
-  {text:"笔", pinyin:"Bǐ", options:["ดินสอ/ปากกา","กระดาษ","หนังสือ"], answer:0},
-  {text:"桌子", pinyin:"Zhuōzi", options:["เก้าอี้","โต๊ะ","ประตู"], answer:1},
-  {text:"椅子", pinyin:"Yǐzi", options:["เตียง","เก้าอี้","หน้าต่าง"], answer:1},
-  {text:"天气", pinyin:"Tiānqì", options:["เวลา","อากาศ","สถานที่"], answer:1},
-  {text:"今天", pinyin:"Jīntiān", options:["วันนี้","เมื่อวาน","พรุ่งนี้"], answer:0},
-  {text:"明天", pinyin:"Míngtiān", options:["เมื่อวาน","วันนี้","พรุ่งนี้"], answer:2},
-  {text:"几月", pinyin:"Jǐ yuè?", options:["เดือนอะไร","วันอะไร","เวลาเท่าไหร่"], answer:0},
-  {text:"生日", pinyin:"Shēngrì", options:["งาน","วันเกิด","การบ้าน"], answer:1}
+// ===================== ข้อมูลข้อสอบ =====================
+const yct1 = [
+  { q:"你好吗 nǐhǎoma", options:["สวัสดี","สบายดีไหม","ลาก่อน"], answer:1 },
+  { q:"苹果 píngguǒ", options:["ส้ม","แอปเปิล","กล้วย"], answer:1 },
+  { q:"老师 lǎoshī", options:["นักเรียน","ครู","เพื่อน"], answer:1 },
+  { q:"狗 gǒu", options:["แมว","สุนัข","ปลา"], answer:1 },
+  { q:"水 shuǐ", options:["น้ำ","น้ำส้ม","น้ำชา"], answer:0 },
+  { q:"谢谢 xièxiè", options:["ขอบคุณ","ขอโทษ","สวัสดี"], answer:0 },
+  { q:"再见 zàijiàn", options:["ลาก่อน","ขอบคุณ","ขอโทษ"], answer:0 },
+  { q:"妈妈 māma", options:["แม่","พ่อ","พี่ชาย"], answer:0 },
+  { q:"爸爸 bàba", options:["แม่","พ่อ","ลูกชาย"], answer:1 },
+  { q:"中国 zhōngguó", options:["ประเทศไทย","จีน","ญี่ปุ่น"], answer:1 },
+  { q:"学校 xuéxiào", options:["บ้าน","โรงเรียน","ร้านอาหาร"], answer:1 },
+  { q:"学生 xuésheng", options:["ครู","เพื่อน","นักเรียน"], answer:2 },
+  { q:"老师好 lǎoshīhǎo", options:["สวัสดีคุณครู","ลาก่อน","ขอโทษ"], answer:0 },
+  { q:"我 wǒ", options:["เธอ","ฉัน","เขา"], answer:1 },
+  { q:"你 nǐ", options:["ฉัน","เธอ","เขา"], answer:1 },
+  { q:"他 tā", options:["เธอ (ผู้หญิง)","เขา (ผู้ชาย)","ฉัน"], answer:1 },
+  { q:"她 tā", options:["เธอ (ผู้หญิง)","เขา (ผู้ชาย)","เรา"], answer:0 },
+  { q:"朋友 péngyou", options:["เพื่อน","พี่ชาย","ครู"], answer:0 },
+  { q:"吃 chī", options:["กิน","ดื่ม","นอน"], answer:0 },
+  { q:"喝 hē", options:["กิน","ดื่ม","เรียน"], answer:1 },
+  { q:"米饭 mǐfàn", options:["ข้าวสวย","ข้าวผัด","ก๋วยเตี๋ยว"], answer:0 },
+  { q:"面条 miàntiáo", options:["ข้าว","ก๋วยเตี๋ยว","ขนมปัง"], answer:1 },
+  { q:"茶 chá", options:["กาแฟ","น้ำชา","น้ำผลไม้"], answer:1 },
+  { q:"喜欢 xǐhuan", options:["ชอบ","เกลียด","กลัว"], answer:0 },
+  { q:"猫 māo", options:["สุนัข","แมว","ปลา"], answer:1 },
+  { q:"大 dà", options:["เล็ก","ใหญ่","ยาว"], answer:1 },
+  { q:"小 xiǎo", options:["ใหญ่","เล็ก","สูง"], answer:1 },
+  { q:"几岁 jǐsuì", options:["อายุเท่าไหร่","ชื่ออะไร","อยู่ที่ไหน"], answer:0 },
+  { q:"名字 míngzi", options:["ชื่อ","อายุ","โรงเรียน"], answer:0 },
+  { q:"书 shū", options:["สมุด","หนังสือ","ดินสอ"], answer:1 },
+  { q:"椅子 yǐzi", options:["โต๊ะ","เก้าอี้","เตียง"], answer:1 },
+  { q:"桌子 zhuōzi", options:["โต๊ะ","เก้าอี้","เตียง"], answer:0 },
+  { q:"天气 tiānqì", options:["เวลา","อากาศ","ฤดู"], answer:1 },
+  { q:"今天 jīntiān", options:["เมื่อวาน","วันนี้","พรุ่งนี้"], answer:1 },
+  { q:"明天 míngtiān", options:["เมื่อวาน","วันนี้","พรุ่งนี้"], answer:2 }
 ];
 
-const yct2Questions = [
-  {text:"你家有几口人", pinyin:"Nǐ jiā yǒu jǐ kǒu rén?", options:["บ้านอยู่ที่ไหน","บ้านมีกี่คน","บ้านชื่ออะไร"], answer:1},
-  {text:"我家有五口人", pinyin:"Wǒ jiā yǒu wǔ kǒu rén.", options:["บ้านมีสามคน","บ้านมีห้าคน","บ้านมีคนเดียว"], answer:1},
-  {text:"我喜欢吃苹果", pinyin:"Wǒ xǐhuān chī píngguǒ.", options:["ฉันชอบกินแอปเปิล","ฉันเกลียดแอปเปิล","ฉันไม่กินผลไม้"], answer:0},
-  {text:"他在学校", pinyin:"Tā zài xuéxiào.", options:["เขาอยู่โรงเรียน","เขากลับบ้าน","เขาอยู่ที่ทำงาน"], answer:0},
-  {text:"现在几点", pinyin:"Xiànzài jǐ diǎn?", options:["ตอนนี้กี่โมง","เมื่อวานนี้กี่โมง","พรุ่งนี้กี่โมง"], answer:0},
-  {text:"现在八点", pinyin:"Xiànzài bā diǎn.", options:["ตอนนี้แปดโมง","ตอนนี้เก้าโมง","ตอนนี้เจ็ดโมง"], answer:0},
-  {text:"你会说中文吗", pinyin:"Nǐ huì shuō Zhōngwén ma?", options:["คุณพูดภาษาจีนได้ไหม","คุณชื่ออะไร","คุณอยู่ที่ไหน"], answer:0},
-  {text:"我会一点儿", pinyin:"Wǒ huì yìdiǎnr.", options:["ฉันพูดไม่ได้เลย","ฉันพูดได้นิดหน่อย","ฉันพูดได้มาก"], answer:1},
-  {text:"请坐", pinyin:"Qǐng zuò.", options:["กรุณานั่ง","กรุณายืน","กรุณาออกไป"], answer:0},
-  {text:"小心", pinyin:"Xiǎoxīn", options:["ระวัง","รีบๆ","เร็วๆ"], answer:0},
-  {text:"慢慢走", pinyin:"Màn man zǒu", options:["เดินช้าๆ","วิ่งเร็ว","หยุดเลย"], answer:0},
-  {text:"现在", pinyin:"Xiànzài", options:["พรุ่งนี้","ตอนนี้","เมื่อวาน"], answer:1},
-  {text:"昨天", pinyin:"Zuótiān", options:["เมื่อวาน","วันนี้","พรุ่งนี้"], answer:0},
-  {text:"明年", pinyin:"Míngnián", options:["ปีหน้า","ปีนี้","ปีที่แล้ว"], answer:0},
-  {text:"电脑", pinyin:"Diànnǎo", options:["โทรศัพท์","คอมพิวเตอร์","ทีวี"], answer:1},
-  {text:"电视", pinyin:"Diànshì", options:["ละคร","ทีวี","หนังสือ"], answer:1},
-  {text:"车站", pinyin:"Chēzhàn", options:["สนามบิน","สถานีรถ","โรงเรียน"], answer:1},
-  {text:"飞机", pinyin:"Fēijī", options:["รถไฟ","เครื่องบิน","รถเมล์"], answer:1},
-  {text:"医院", pinyin:"Yīyuàn", options:["ร้านอาหาร","โรงพยาบาล","ร้านหนังสือ"], answer:1},
-  {text:"商店", pinyin:"Shāngdiàn", options:["ร้านค้า","ธนาคาร","โรงเรียน"], answer:0},
-  {text:"买东西", pinyin:"Mǎi dōngxī", options:["ขายของ","ซื้อของ","อ่านหนังสือ"], answer:1},
-  {text:"多少钱", pinyin:"Duōshǎo qián?", options:["เท่าไหร่ราคา","กี่คน","กี่ชั่วโมง"], answer:0},
-  {text:"太贵了", pinyin:"Tài guì le", options:["ถูกไป","แพงไป","พอดี"], answer:1},
-  {text:"便宜一点", pinyin:"Piányi yìdiǎn", options:["แพงขึ้นหน่อย","ถูกลงหน่อย","ไม่เอาแล้ว"], answer:1},
-  {text:"可以", pinyin:"Kěyǐ", options:["ไม่ได้","ได้/สามารถ","อย่า"], answer:1},
-  {text:"不知道", pinyin:"Bù zhīdào", options:["ฉันรู้","ฉันไม่รู้","ฉันเข้าใจ"], answer:1},
-  {text:"喜欢做什么", pinyin:"Xǐhuān zuò shénme?", options:["ชอบทำอะไร","ทำไม","อยู่ไหน"], answer:0},
-  {text:"我喜欢看书", pinyin:"Wǒ xǐhuān kàn shū.", options:["ฉันชอบดูทีวี","ฉันชอบอ่านหนังสือ","ฉันชอบออกกำลังกาย"], answer:1},
-  {text:"我们一起去", pinyin:"Wǒmen yìqǐ qù.", options:["ฉันไปเอง","เราไปด้วยกัน","ไม่ไป"], answer:1},
-  {text:"等一等", pinyin:"Děng yí děng", options:["รอหน่อย","ไปเลย","เริ่มเลย"], answer:0},
-  {text:"怎么走", pinyin:"Zěnme zǒu?", options:["ทำอย่างไร","เดินอย่างไร/ไปทางไหน","ทำไม"], answer:1},
-  {text:"左转", pinyin:"Zuǒ zhuǎn", options:["เลี้ยวขวา","เลี้ยวซ้าย","ตรงไป"], answer:1},
-  {text:"右转", pinyin:"Yòu zhuǎn", options:["เลี้ยวซ้าย","ตรงไป","เลี้ยวขวา"], answer:2},
-  {text:"一直走", pinyin:"Yìzhí zǒu", options:["เลี้ยวซ้าย","ตรงไป","เลี้ยวขวา"], answer:1},
-  {text:"早上好", pinyin:"Zǎoshang hǎo", options:["ราตรีสวัสดิ์","สวัสดีตอนเช้า","สวัสดีตอนเย็น"], answer:1},
-  {text:"晚安", pinyin:"Wǎn'ān", options:["สวัสดีตอนเช้า","ราตรีสวัสดิ์","ลาก่อน"], answer:1},
-  {text:"生日快乐", pinyin:"Shēngrì kuàilè", options:["สุขสันต์วันเกิด","แฮปปี้คริสต์มาส","สวัสดีปีใหม่"], answer:0},
-  {text:"恭喜你", pinyin:"Gōngxǐ nǐ", options:["ขอโทษ","ยินดีด้วย","ขอบคุณ"], answer:1},
-  {text:"帮助", pinyin:"Bāngzhù", options:["ช่วยเหลือ","เรียนรู้","เล่น"], answer:0}
+const yct2 = [
+  { q:"运动 yùndòng", options:["เล่นกีฬา","อ่านหนังสือ","นอน"], answer:0 },
+  { q:"跑步 pǎobù", options:["เดิน","วิ่ง","กระโดด"], answer:1 },
+  { q:"游泳 yóuyǒng", options:["ว่ายน้ำ","วิ่ง","เตะบอล"], answer:0 },
+  { q:"足球 zúqiú", options:["ฟุตบอล","บาส","วอลเลย์"], answer:0 },
+  { q:"篮球 lánqiú", options:["ฟุตบอล","บาส","วอลเลย์"], answer:1 },
+  { q:"苹果 píngguǒ", options:["ส้ม","แอปเปิล","กล้วย"], answer:1 },
+  { q:"香蕉 xiāngjiāo", options:["ส้ม","กล้วย","แอปเปิล"], answer:1 },
+  { q:"西瓜 xīguā", options:["แตงโม","แอปเปิล","ส้ม"], answer:0 },
+  { q:"橙子 chéngzi", options:["ส้ม","แอปเปิล","กล้วย"], answer:0 },
+  { q:"牛奶 niúnǎi", options:["น้ำ","นม","น้ำผลไม้"], answer:1 },
+  { q:"面包 miànbāo", options:["ขนมปัง","ข้าว","ก๋วยเตี๋ยว"], answer:0 },
+  { q:"米饭 mǐfàn", options:["ข้าวสวย","ข้าวผัด","ก๋วยเตี๋ยว"], answer:0 },
+  { q:"鸡蛋 jīdàn", options:["ไข่ไก่","นม","เนื้อ"], answer:0 },
+  { q:"鱼 yú", options:["ปลา","ไก่","เนื้อ"], answer:0 },
+  { q:"肉 ròu", options:["ปลา","เนื้อ","ผัก"], answer:1 },
+  { q:"水 shuǐ", options:["น้ำ","น้ำชา","น้ำผลไม้"], answer:0 },
+  { q:"茶 chá", options:["น้ำชา","กาแฟ","น้ำส้ม"], answer:0 },
+  { q:"咖啡 kāfēi", options:["กาแฟ","ชา","น้ำ"], answer:0 },
+  { q:"牛肉 niúròu", options:["หมู","เนื้อวัว","ไก่"], answer:1 },
+  { q:"鸡肉 jīròu", options:["ไก่","เนื้อ","หมู"], answer:0 },
+  { q:"学校 xuéxiào", options:["บ้าน","โรงเรียน","ร้านอาหาร"], answer:1 },
+  { q:"教室 jiàoshì", options:["ห้องเรียน","บ้าน","ร้านอาหาร"], answer:0 },
+  { q:"老师 lǎoshī", options:["ครู","นักเรียน","เพื่อน"], answer:0 },
+  { q:"学生 xuésheng", options:["นักเรียน","ครู","เพื่อน"], answer:0 },
+  { q:"书 shū", options:["หนังสือ","สมุด","ดินสอ"], answer:0 },
+  { q:"笔 bǐ", options:["ปากกา","ดินสอ","สมุด"], answer:0 },
+  { q:"橡皮 xiàngpí", options:["ยางลบ","ดินสอ","ปากกา"], answer:0 },
+  { q:"桌子 zhuōzi", options:["โต๊ะ","เก้าอี้","เตียง"], answer:0 },
+  { q:"椅子 yǐzi", options:["เก้าอี้","โต๊ะ","เตียง"], answer:0 },
+  { q:"电脑 diànnǎo", options:["คอมพิวเตอร์","โทรศัพท์","โทรทัศน์"], answer:0 },
+  { q:"手机 shǒujī", options:["โทรศัพท์","คอมพิวเตอร์","วิทยุ"], answer:0 },
+  { q:"天气 tiānqì", options:["อากาศ","เวลา","ฤดู"], answer:0 },
+  { q:"晴天 qíngtiān", options:["อากาศดี","ฝนตก","มีเมฆ"], answer:0 },
+  { q:"下雨 xiàyǔ", options:["ฝนตก","แดดออก","มีเมฆ"], answer:0 },
+  { q:"雪 xuě", options:["หิมะ","ฝน","แดด"], answer:0 },
+  { q:"热 rè", options:["ร้อน","หนาว","เย็น"], answer:0 },
+  { q:"冷 lěng", options:["หนาว","ร้อน","เย็น"], answer:0 },
+  { q:"高 gāo", options:["สูง","ต่ำ","สั้น"], answer:0 },
+  { q:"矮 ǎi", options:["ต่ำ","สูง","สั้น"], answer:0 },
+  { q:"大 dà", options:["ใหญ่","เล็ก","สั้น"], answer:0 },
+  { q:"小 xiǎo", options:["เล็ก","ใหญ่","สั้น"], answer:0 }
 ];
-// yct2Questions length is 40 items; if less, add/adjust as necessary
-// ensure yct2Questions has 40 items — if fewer, we can duplicate or add more; above has 40.
 
-if(yct2Questions.length < 40){
-  // (fill with simple items to reach 40 if missing)
-  const fillerCount = 40 - yct2Questions.length;
-  for(let i=0;i<fillerCount;i++){
-    yct2Questions.push({text:`词汇${i+1}`, pinyin:`Cíhuì ${i+1}`, options:["ตัวเลือก1","ตัวเลือก2","ตัวเลือก3"], answer:0});
-  }
-}
-
-/* =========== ตัวแปรควบคุม =========== */
-let exam = null; // 'yct1' or 'yct2'
-let questions = [];
-let current = 0;
+let quizData = []; // จะโหลดตาม YCT 1 หรือ 2
+let currentQuestion = 0;
 let score = 0;
-let questionTime = 90; // seconds per question
+let questionTime = 90;
 let totalTime = 0;
-let timerInterval = null;
-let perQuestionTimer = null;
-let userAnswers = [];     // store selected index or null
-let answerTimes = [];     // store timestamp string when clicked
-let timeTakenPerQ = [];   // store seconds used to answer each question
+let timerInterval;
+let userAnswers = [];
+let leaderboard = [];
 
-/* =========== ฟังก์ชันเริ่มข้อสอบ =========== */
-function startExam(which){
-  exam = which;
-  questions = (which === 'yct1') ? yct1Questions.slice() : yct2Questions.slice();
-  // ถ้าต้องการสุ่มคำถาม ให้ uncomment บรรทัดด้านล่าง
-  // questions = shuffleArray(questions);
-  current = 0; score = 0;
-  userAnswers = new Array(questions.length).fill(null);
-  answerTimes = new Array(questions.length).fill(null);
-  timeTakenPerQ = new Array(questions.length).fill(null);
-  totalTime = questions.length * questionTime;
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('leaderboardArea').style.display = 'none';
-  document.getElementById('resultArea').style.display = 'none';
-  document.getElementById('quizArea').style.display = 'block';
+// ===================== ฟังก์ชัน =====================
+function startQuiz(type="yct1") {
+  if(type==="yct1"){ quizData=yct1; }
+  else{ quizData=yct2; }
+  currentQuestion=0; score=0; userAnswers=[]; totalTime=quizData.length*questionTime;
+  document.querySelector('h1').textContent = type==="yct1" ? "YCT 1 Quiz 🇨🇳" : "YCT 2 Quiz 🇨🇳";
   showQuestion();
-  startTotalTimer();
 }
 
-/* =========== แสดงคำถาม =========== */
-function showQuestion(){
+function showQuestion() {
   clearInterval(timerInterval);
-  clearInterval(perQuestionTimer);
-
-  const qObj = questions[current];
-  const wrapper = document.getElementById('questionWrapper');
-  wrapper.innerHTML = `
-    <div class="question">
-      <div class="q-title">ข้อ ${current+1} / ${questions.length}: <strong>${qObj.text}</strong></div>
-      <div class="pinyin">${qObj.pinyin}</div>
-      <div class="options" id="opts"></div>
-    </div>
-    <div style="font-size:0.95rem;color:#444; text-align:center;">
-      ⏱ เวลาเหลือสำหรับข้อนี้: <span id="qTimer">--</span>  &nbsp; | &nbsp;
-      ⏱ เวลาทั้งหมด: <span id="tTimer">--</span>
-    </div>
-  `;
-  const optsDiv = document.getElementById('opts');
-  qObj.options.forEach((opt, idx) => {
-    const btn = document.createElement('button');
-    btn.innerText = opt;
-    btn.onclick = () => selectAnswer(idx);
-    optsDiv.appendChild(btn);
+  if(currentQuestion>=quizData.length){ return showResult(); }
+  const quizDiv = document.getElementById('quiz');
+  quizDiv.innerHTML='';
+  const q = quizData[currentQuestion];
+  const questionEl=document.createElement('div'); questionEl.className='question';
+  questionEl.innerHTML=`<h3>ข้อ ${currentQuestion+1}: ${q.q}</h3>`;
+  const optionsDiv=document.createElement('div'); optionsDiv.className='options';
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('button'); btn.innerText=opt;
+    btn.onclick=()=>checkAnswer(i); optionsDiv.appendChild(btn);
   });
+  questionEl.appendChild(optionsDiv); quizDiv.appendChild(questionEl);
+  startQuestionTimer();
+}
 
-  // ปุ่มนำทาง
-  document.getElementById('prevBtn').style.display = (current>0)?'inline-block':'none';
-  document.getElementById('nextBtn').style.display = (current < questions.length-1)?'inline-block':'none';
-  document.getElementById('finishBtn').style.display = 'inline-block';
-
-  // เริ่มจับเวลา per-question
-  let timeLeft = questionTime;
-  document.getElementById('qTimer').innerText = formatTime(timeLeft);
-  perQuestionTimer = setInterval(()=>{
-    timeLeft--;
-    timeTakenPerQ[current] = (questions.length*questionTime - totalTime) ? (questions.length*questionTime - totalTime) - (current*(questionTime)) + (questionTime - timeLeft) : (questionTime - timeLeft);
-    document.getElementById('qTimer').innerText = formatTime(timeLeft);
-    if(timeLeft<=0){
-      clearInterval(perQuestionTimer);
-      // ข้ามข้อ
-      userAnswers[current] = null;
-      answerTimes[current] = null;
-      current++;
-      if(current >= questions.length) finishExam();
-      else showQuestion();
-    }
+function startQuestionTimer(){
+  let timeLeft=questionTime; const timerDisplay=document.getElementById('timer');
+  timerInterval=setInterval(()=>{
+    timeLeft--; totalTime--;
+    const min=Math.floor(totalTime/60), sec=totalTime%60;
+    timerDisplay.textContent=`เหลือเวลา: ${min}:${sec.toString().padStart(2,'0')} นาที`;
+    if(timeLeft<=0) nextQuestionAuto();
+    if(totalTime<=0) showResult();
   },1000);
 }
 
-/* =========== จับเวลารวมของข้อสอบ =========== */
-function startTotalTimer(){
+function nextQuestionAuto(){ clearInterval(timerInterval); currentQuestion++; showQuestion(); }
+
+function checkAnswer(selected){
   clearInterval(timerInterval);
-  timerInterval = setInterval(()=>{
-    totalTime--;
-    const tDisp = document.getElementById('tTimer');
-    if(tDisp) tDisp.innerText = formatTime(totalTime);
-    const topTimer = document.getElementById('timerDisplay');
-    if(topTimer){
-      const min = Math.floor(totalTime/60);
-      const sec = totalTime%60;
-      topTimer.innerText = `เหลือเวลา: ${min}:${sec.toString().padStart(2,'0')} นาที`;
-    }
-    if(totalTime<=0){
-      clearInterval(timerInterval);
-      finishExam();
-    }
-  },1000);
-}
-
-/* =========== เลือกคำตอบ =========== */
-function selectAnswer(idx){
-  // บันทึกเวลา
-  const now = new Date();
-  answerTimes[current] = now.toLocaleTimeString();
-  // คำนวณเวลาที่ใช้ตอบ (วินาที) สำหรับข้อนี้
-  // เราเก็บเวลาที่เหลือจากตัวแปร perQuestionTimer? แทน, เรจะคำนวณจาก timestamps:
-  // (ง่ายที่สุด) บันทึกเวลาที่ตอบใน timeTakenPerQ เป็นค่าที่คำนวณจากเวลาที่เหลือบนจอ:
-  // แต่เพื่อเรียบง่าย ให้เราคำนวณจาก totalTime และ index:
-  // timeTakenPerQ[current] = questionTime - (timeLeft) --> เรไม่ได้เก็บ timeLeft อย่างถาวร ดังนั้นบันทึกโดยจับเวลาจาก Date()
-  timeTakenPerQ[current] = "—"; // ไม่ระบุเชิงวินาทีอย่างละเอียดที่นี่
-
-  userAnswers[current] = idx;
-  // บันทึกคะแนนชั่วคราว
-  if(idx === questions[current].answer) score++;
-
-  // เน้นปุ่มเฉลย (correct / wrong)
-  const buttons = document.querySelectorAll('.options button');
-  buttons.forEach((b, i) => {
-    b.disabled = true;
-    if(i === questions[current].answer) b.classList.add('correct');
-    if(i === idx && i !== questions[current].answer) b.classList.add('wrong');
+  const q=quizData[currentQuestion];
+  const buttons=document.querySelectorAll('.options button');
+  buttons.forEach((btn,idx)=>{
+    if(idx===q.answer) btn.classList.add('correct');
+    if(idx===selected && idx!==q.answer) btn.classList.add('wrong');
+    btn.disabled=true;
   });
-
-  // หยุด per-question timer
-  clearInterval(perQuestionTimer);
-
-  // หลัง 1 วินาทีไปข้อถัดไป (หรือถ้าข้อสุดท้าย ให้แสดงผล)
-  setTimeout(()=>{
-    current++;
-    if(current >= questions.length) finishExam();
-    else showQuestion();
-  },800);
+  userAnswers[currentQuestion]=selected;
+  if(selected===q.answer) score++;
+  const nextBtn=document.createElement('button'); nextBtn.className='next-btn';
+  nextBtn.innerText = currentQuestion<quizData.length-1 ? 'ข้อถัดไป':'จบข้อสอบ';
+  nextBtn.onclick=nextQuestionAuto;
+  document.getElementById('quiz').appendChild(nextBtn);
 }
 
-/* =========== นำทางข้อก่อน/ถัดไป =========== */
-function prevQuestion(){
-  if(current>0){
-    current--;
-    showQuestion();
-  }
-}
-function nextQuestion(){
-  if(current < questions.length-1){
-    current++;
-    showQuestion();
-  }
-}
-
-/* =========== จบข้อสอบ =========== */
-function finishExam(){
+function showResult(){
   clearInterval(timerInterval);
-  clearInterval(perQuestionTimer);
-  // คำนวนคะแนนที่แท้จริง (recalculate to be safe)
-  score = 0;
-  for(let i=0;i<questions.length;i++){
-    if(userAnswers[i] !== null && userAnswers[i] === questions[i].answer) score++;
-  }
-
-  const area = document.getElementById('resultArea');
-  area.style.display = 'block';
-  document.getElementById('quizArea').style.display = 'none';
-
-  // แสดงผลและปุ่มไป YCT2 ถาจบ YCT1
-  let emoji = (exam==='yct1' && score>=35) || (exam==='yct2' && score>=40) ? '💯' : '';
-  let html = `<div class="result"><h2>คุณทำข้อสอบ ${exam.toUpperCase()} เสร็จแล้ว! คะแนนของคุณ: ${score} / ${questions.length} ${emoji}</h2>`;
-  html += `<div style="margin:8px 0; text-align:center;">`;
-  html += `<button class="btn" onclick="showAnswers()">ดูเฉลย</button> `;
-  html += `<button class="btn secondary" onclick="restartThisExam()">ทำใหม่</button> `;
-  if(exam==='yct1') html += `<button class="btn" onclick="startExam('yct2')">ไป YCT 2 ➡️</button> `;
-  html += `<button class="btn" onclick="openLeaderboard()">Leaderboard</button>`;
-  html += `</div></div>`;
-  area.innerHTML = html;
-
-  // อัปเดต leaderboard (เก็บคะแนนสูงสุด)
-  promptSaveScore();
+  const quizDiv=document.getElementById('quiz'); document.getElementById('timer').style.display='none';
+  let resultText=`คุณทำข้อสอบเสร็จแล้ว! คะแนนของคุณ: ${score} / ${quizData.length}`;
+  let buttons=`<button class="restart-btn" onclick="startQuiz('${quizData===yct1?'yct1':'yct2'}')">เริ่มทำใหม่</button>`;
+  if(quizData===yct1){ buttons+=`<button class="toYCT2-btn" onclick="startQuiz('yct2')">ไป YCT 2</button>`; }
+  buttons+=`<button class="leaderboard-btn" onclick="showLeaderboard()">Leaderboard</button>`;
+  if(score>=Math.floor(quizData.length*0.7)) resultText+=' 💯'; else resultText+=' 😩';
+  saveLeaderboard(score);
+  quizDiv.innerHTML=`<h2>${resultText}</h2>${buttons}`;
 }
 
-/* =========== การบันทึกคะแนน (Leaderboard) =========== */
-function promptSaveScore(){
-  const name = prompt("บันทึกคะแนน: กรุณาใส่ชื่อของคุณ (แสดงใน Leaderboard):","ผู้เล่น");
-  if(name === null) return;
-  saveToLeaderboard(name.trim() || "ผู้เล่น", exam, score);
-}
-
-function saveToLeaderboard(name, examKey, newScore){
-  // โครงสร้างใน localStorage: leaderboard = { yct1: {name:score, ...}, yct2: {...} }
-  const key = "yct_leaderboard_v1";
-  let board = JSON.parse(localStorage.getItem(key) || "{}");
-  if(!board[examKey]) board[examKey] = {};
-  // เก็บคะแนนสูงสุด (max)
-  const prev = board[examKey][name];
-  if(prev === undefined || newScore > prev){
-    board[examKey][name] = newScore;
-    localStorage.setItem(key, JSON.stringify(board));
-    alert("บันทึกคะแนนเรียบร้อย — คะแนนสูงสุดของคุณถูกอัปเดตแล้ว!");
-  } else {
-    alert("คุณได้คะแนนไม่เกินคะแนนสูงสุดเดิม จึงไม่อัปเดต leaderboard.");
-  }
-  openLeaderboard();
-}
-
-/* =========== แสดงหน้าเฉลย =========== */
 function showAnswers(){
-  // แสดงลิงก์ไปยังแต่ละข้อ และรายละเอียด: เวลาคลิก, คำตอบของผู้ใช้, คำตอบที่ถูก
-  const wrapper = document.getElementById('questionWrapper');
-  document.getElementById('quizArea').style.display = 'block';
-  document.getElementById('resultArea').style.display = 'none';
-  let html = '<div class="question-links">';
-  for(let i=0;i<questions.length;i++){
-    html += `<span class="qlink" onclick="showSingleAnswer(${i})">ข้อ ${i+1}</span>`;
-  }
-  html += '</div>';
-  html += '<div id="answersList">';
-  for(let i=0;i<questions.length;i++){
-    const q = questions[i];
-    const user = userAnswers[i];
-    const correct = q.answer;
-    const userText = (user===null)? "ยังไม่ได้ตอบ": q.options[user];
-    const correctText = q.options[correct];
-    const timeClick = answerTimes[i] || "-";
-    const colorClass = (user !== null && user === correct) ? 'answer-correct' : 'answer-wrong';
-    html += `<div id="ans-${i}" class="question" style="background:#fff;">
-      <b>ข้อ ${i+1}:</b> ${q.text} <span class="pinyin">${q.pinyin}</span><br>
-      ⏱ เวลาคลิกตอบ: <i>${timeClick}</i><br>
-      คำตอบของคุณ: <span class="${colorClass}">${userText}</span><br>
-      ✅ คำตอบที่ถูก: <b>${correctText}</b>
-    </div>`;
-  }
-  html += `<div style="text-align:center; margin-top:10px;">
-    <button class="btn" onclick="finishViewAnswers()">เสร็จแล้ว กลับไปหน้าแรก</button>
-  </div>`;
-  wrapper.innerHTML = html;
-}
-
-/* ดูเฉลยข้อเดียว */
-function showSingleAnswer(i){
-  const q = questions[i];
-  const user = userAnswers[i];
-  const correct = q.answer;
-  const userText = (user===null)? "ยังไม่ได้ตอบ": q.options[user];
-  const correctText = q.options[correct];
-  const timeClick = answerTimes[i] || "-";
-  document.getElementById('questionWrapper').innerHTML = `
-    <div class="question">
-      <div class="q-title">ข้อ ${i+1}: <strong>${q.text}</strong></div>
-      <div class="pinyin">${q.pinyin}</div>
-      ⏱ เวลาคลิกตอบ: <i>${timeClick}</i><br><br>
-      คำตอบของคุณ: <span class="${(user!==null && user===correct)?'answer-correct':'answer-wrong'}">${userText}</span><br>
-      ✅ คำตอบที่ถูก: <b>${correctText}</b>
-    </div>
-    <div style="text-align:center; margin-top:10px;">
-      <button class="btn secondary" onclick="showAnswers()">กลับไปที่เฉลยทั้งหมด</button>
-    </div>
-  `;
-  document.getElementById('quizArea').style.display = 'block';
-}
-
-/* ปิดหน้าเฉลย กลับไปหน้าหลัก */
-function finishViewAnswers(){
-  document.getElementById('quizArea').style.display = 'none';
-  document.getElementById('intro').style.display = 'block';
-  document.getElementById('resultArea').style.display = 'none';
-  document.getElementById('leaderboardArea').style.display = 'none';
-}
-
-/* =========== Leaderboard =========== */
-function openLeaderboard(){
-  const key = "yct_leaderboard_v1";
-  let board = JSON.parse(localStorage.getItem(key) || "{}");
-  const area = document.getElementById('leaderboardArea');
-  area.style.display = 'block';
-  area.innerHTML = `<h3>Leaderboard (คะแนนสูงสุด)</h3>
-    <div class="leaderboard">
-      <h4>YCT 1</h4>
-      <div id="lb-yct1"></div>
-      <h4 style="margin-top:12px">YCT 2</h4>
-      <div id="lb-yct2"></div>
-      <div style="text-align:center; margin-top:10px;">
-        <button class="btn" onclick="clearLeaderboard()">ลบ Leaderboard</button>
-        <button class="btn secondary" onclick="finishViewAnswers()">ปิด</button>
-      </div>
-    </div>`;
-
-  renderLB('yct1', board['yct1'] || {});
-  renderLB('yct2', board['yct2'] || {});
-  // ซ่อน quiz view / intro
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('quizArea').style.display = 'none';
-  document.getElementById('resultArea').style.display = 'none';
-}
-
-function renderLB(examKey, data){
-  const div = document.getElementById('lb-'+examKey);
-  const arr = Object.entries(data || {}).map(([name,score])=>({name,score}));
-  arr.sort((a,b)=>b.score - a.score);
-  if(arr.length===0){
-    div.innerHTML = '<div style="color:#555">ยังไม่มีคะแนน</div>';
-    return;
-  }
-  let html = '';
-  arr.forEach((r,i)=>{
-    html += `<div class="lb-row"><div>#${i+1} ${escapeHtml(r.name)}</div><div>${r.score}</div></div>`;
+  const quizDiv=document.getElementById('quiz'); let html='<h2>เฉลยข้อสอบ 💡</h2>';
+  quizData.forEach((q,i)=>{
+    const user=userAnswers[i]; const correctAns=q.options[q.answer];
+    let colorClass=user===q.answer?'answer-correct':'answer-wrong';
+    html+=`<div class="question"><b>ข้อ ${i+1}:</b> ${q.q}<br>
+           คำตอบของคุณ: <span class="${colorClass}">${q.options[user]||"ยังไม่ได้ตอบ"}</span><br>
+           ✅ คำตอบที่ถูกคือ: <b>${correctAns}</b></div>`;
   });
-  div.innerHTML = html;
+  html+=`<button class="restart-btn" onclick="startQuiz('${quizData===yct1?'yct1':'yct2'}')">กลับไปทำใหม่</button>`;
+  quizDiv.innerHTML=html;
 }
 
-function clearLeaderboard(){
-  if(!confirm("ลบ leaderboard ทั้งหมด? การกระทำนี้ไม่สามารถย้อนกลับได้")) return;
-  localStorage.removeItem("yct_leaderboard_v1");
-  openLeaderboard();
+function saveLeaderboard(score){
+  const date=new Date(); leaderboard.push({score, date:date.toLocaleString()});
+  leaderboard.sort((a,b)=>b.score-a.score); if(leaderboard.length>10) leaderboard.length=10;
 }
 
-/* =========== Restart exam (same) =========== */
-function restartThisExam(){
-  startExam(exam);
+function showLeaderboard(){
+  const quizDiv=document.getElementById('quiz'); let html='<h2>Leaderboard 🏆</h2>';
+  leaderboard.forEach((entry,i)=>{ html+=`<div>${i+1}. คะแนน: ${entry.score} เวลา: ${entry.date}</div>`; });
+  html+=`<button class="restart-btn" onclick="startQuiz('${quizData===yct1?'yct1':'yct2'}')">กลับไปทำข้อสอบ</button>`;
+  quizDiv.innerHTML=html;
 }
 
-/* =========== ยูทิลิตี้ =========== */
-function formatTime(sec){
-  if(sec < 0) sec = 0;
-  const m = Math.floor(sec/60);
-  const s = sec%60;
-  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-}
-function shuffleArray(a){
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-}
-
+// ===================== เริ่ม YCT1 =====================
+startQuiz('yct1');
 </script>
 </body>
 </html>
