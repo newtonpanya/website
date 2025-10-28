@@ -24,13 +24,13 @@
   .options button:hover { background-color:#EF9A9A; }
   .correct { background-color:#81C784 !important; color:#fff !important; }
   .wrong { background-color:#E57373 !important; color:#fff !important; }
-  .next-btn, .restart-btn, .answer-btn, .toYCT2-btn, .leaderboard-btn {
+  .next-btn, .restart-btn, .answer-btn, .toYCT2-btn, .leaderboard-btn, .teacher-btn, .delete-btn, .add-btn {
     display:block; margin:15px auto; padding:10px 20px;
     border:none; border-radius:10px; background-color:#F44336;
     color:white; font-size:1rem; cursor:pointer;
   }
   .next-btn:hover, .restart-btn:hover, .answer-btn:hover,
-  .toYCT2-btn:hover, .leaderboard-btn:hover { background-color:#D32F2F; }
+  .toYCT2-btn:hover, .leaderboard-btn:hover, .teacher-btn:hover, .delete-btn:hover, .add-btn:hover { background-color:#D32F2F; }
   .answer-correct { color:#2E7D32; font-weight:bold; }
   .answer-wrong { color:#C62828; font-weight:bold; }
   h2 { text-align:center; color:#C62828; }
@@ -61,6 +61,7 @@ const yct1 = [
   {text:"再见",pinyin:"zàijiàn",options:["สวัสดี","ลาก่อน","ขอโทษ"],answer:1},
   {text:"我叫小明。",pinyin:"wǒ jiào Xiǎomíng.",options:["ฉันชื่อเสี่ยวหมิง","ฉันมาจากจีน","ฉันชอบเรียน"],answer:0},
 ];
+
 // --------------------- YCT 2 ---------------------
 const yct2 = [
   {text:"他是谁？",pinyin:"tā shì shéi?",options:["เขาเป็นใคร","เขาทำอะไร","เขาอยู่ไหน"],answer:0},
@@ -76,6 +77,7 @@ let currentIndex = 0;
 let score = 0;
 let timer;
 let timeLeft = 0;
+let isTeacher = false;
 
 // --------------------- ฟังก์ชันจับเวลา ---------------------
 function startTimer() {
@@ -114,7 +116,7 @@ function showQuestion() {
     html += `<button onclick='selectAnswer(${i})'>${opt}</button>`;
   });
   html += "</div></div>";
-  document.getElementById('quiz').innerHTML = html;
+  quizDiv.innerHTML = html;
 }
 
 function selectAnswer(choice) {
@@ -164,12 +166,58 @@ function openLeaderboard(){
   let html = '<h2>🏆 Leaderboard</h2>';
   ['yct1','yct2'].forEach(ex=>{
     html += `<h3>${ex.toUpperCase()}</h3>`;
-    const entries = data[ex] ? Object.entries(data[ex]).sort((a,b)=>b[1]-a[1]).slice(0,5) : [];
+    const entries = data[ex] ? Object.entries(data[ex]).sort((a,b)=>b[1]-a[1]).slice(0,10) : [];
     if(entries.length===0) html += '<p>ยังไม่มีข้อมูล</p>';
     else html += entries.map(([d,s])=>`<div>${d} — ${s}%</div>`).join('');
   });
+  html += `<button class='teacher-btn' onclick='enterTeacherMode()'>โหมดครู 🧑‍🏫</button>`;
   html += `<button class='restart-btn' onclick=\"startQuiz('yct1')\">กลับไปทำข้อสอบ</button>`;
   quizDiv.innerHTML = html;
+}
+
+// --------------------- โหมดครู ---------------------
+function enterTeacherMode(){
+  const email = prompt("กรอกอีเมลครูเพื่อเข้าสู่โหมดควบคุม:");
+  if(email === "newton_panya@gmail.com"){
+    isTeacher = true;
+    alert("เข้าสู่โหมดครูเรียบร้อย ✅");
+    teacherPanel();
+  } else {
+    alert("❌ อีเมลไม่ถูกต้อง! เฉพาะครูเท่านั้นที่เข้าถึงได้");
+  }
+}
+
+function teacherPanel(){
+  const quizDiv = document.getElementById('quiz');
+  const data = JSON.parse(localStorage.getItem('yct_leaderboard_v1')||'{}');
+  let html = '<h2>🧑‍🏫 โหมดครู</h2>';
+  html += '<p>คุณสามารถล้างหรือตั้งคะแนนเองได้</p>';
+  html += `<button class='delete-btn' onclick='clearLeaderboard()'>🗑️ ลบ Leaderboard ทั้งหมด</button>`;
+  html += `<button class='add-btn' onclick='addManualScore()'>➕ เพิ่มคะแนนเอง</button>`;
+  html += `<button class='restart-btn' onclick='openLeaderboard()'>กลับไปดู Leaderboard</button>`;
+  quizDiv.innerHTML = html;
+}
+
+function clearLeaderboard(){
+  if(confirm("คุณแน่ใจหรือไม่ว่าจะลบ Leaderboard ทั้งหมด?")){
+    localStorage.removeItem('yct_leaderboard_v1');
+    alert("ลบเรียบร้อยแล้ว");
+    openLeaderboard();
+  }
+}
+
+function addManualScore(){
+  const name = prompt("กรอกชื่อหรือลงเวลา:");
+  const score = prompt("กรอกคะแนนเป็นเปอร์เซ็นต์ (0-100):");
+  const exam = prompt("กรอกชุดข้อสอบ (yct1 หรือ yct2):");
+  if(!name || !score || !exam) return alert("ข้อมูลไม่ครบ");
+  const key = 'yct_leaderboard_v1';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data[exam]) data[exam] = {};
+  data[exam][name] = Number(score);
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("เพิ่มคะแนนเรียบร้อย ✅");
+  openLeaderboard();
 }
 
 // --------------------- เริ่ม ---------------------
