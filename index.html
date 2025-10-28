@@ -140,10 +140,10 @@ function showResult() {
   const emoji = percent >= 80 ? '💯' : (percent >= 50 ? '😊' : '😢');
   let html = `<h2>คุณได้ ${score}/${total} คะแนน ${emoji}</h2>`;
   if(currentExam==='yct1'){
-    html += `<button class='toYCT2-btn' onclick=\"startQuiz('yct2')\">ไปทำ YCT 2 ➡️</button>`;
+    html += `<button class='toYCT2-btn' onclick="startQuiz('yct2')">ไปทำ YCT 2 ➡️</button>`;
   }
   html += `<button class='leaderboard-btn' onclick='openLeaderboard()'>Leaderboard</button>
-           <button class='restart-btn' onclick=\"startQuiz('${currentExam}')\">ทำใหม่</button>`;
+           <button class='restart-btn' onclick="startQuiz('${currentExam}')">ทำใหม่</button>`;
   quizDiv.innerHTML = html;
   saveScore(percent);
 }
@@ -170,13 +170,13 @@ function openLeaderboard(){
     else html += entries.map(([d,s])=>`<div>${d} — ${s}%</div>`).join('');
   });
   html += `<button class='teacher-btn' onclick='enterTeacherMode()'>โหมดครู 🧑‍🏫</button>`;
-  html += `<button class='restart-btn' onclick=\"startQuiz('yct1')\">กลับไปทำข้อสอบ</button>`;
+  html += `<button class='restart-btn' onclick="startQuiz('yct1')">กลับไปทำข้อสอบ</button>`;
   quizDiv.innerHTML = html;
 }
 
 // --------------------- โหมดครู ---------------------
 function enterTeacherMode(){
-  const email = prompt("กรอกรหัสครูเพื่อเข้าสู่โหมดควบคุม:");
+  const password = prompt("กรอกรหัสครูเพื่อเข้าสู่โหมดควบคุม:");
   if(password === "2222"){
     isTeacher = true;
     alert("เข้าสู่โหมดครูเรียบร้อย ✅");
