@@ -48,7 +48,7 @@
 </div>
 
 <script>
-// --------------------- YCT 1 ---------------------
+// --------------------- ข้อมูลข้อสอบ ---------------------
 const yct1 = [
   {text:"你好吗？",pinyin:"nǐ hǎo ma?",options:["สวัสดี","สบายดีไหม","ลาก่อน"],answer:1},
   {text:"我很好。",pinyin:"wǒ hěn hǎo.",options:["ฉันไม่ดี","ฉันดีมาก","ฉันชื่อ"],answer:1},
@@ -62,7 +62,6 @@ const yct1 = [
   {text:"我叫小明。",pinyin:"wǒ jiào Xiǎomíng.",options:["ฉันชื่อเสี่ยวหมิง","ฉันมาจากจีน","ฉันชอบเรียน"],answer:0},
 ];
 
-// --------------------- YCT 2 ---------------------
 const yct2 = [
   {text:"他是谁？",pinyin:"tā shì shéi?",options:["เขาเป็นใคร","เขาทำอะไร","เขาอยู่ไหน"],answer:0},
   {text:"我喜欢学习中文。",pinyin:"wǒ xǐhuān xuéxí zhōngwén.",options:["ฉันไม่ชอบภาษาจีน","ฉันชอบเรียนภาษาจีน","ฉันเรียนภาษาอังกฤษ"],answer:1},
@@ -189,35 +188,47 @@ function enterTeacherMode(){
 
 function teacherPanel(){
   const quizDiv = document.getElementById('quiz');
-  const data = JSON.parse(localStorage.getItem('yct_leaderboard_v1')||'{}');
   let html = '<h2>🧑‍🏫 โหมดครู</h2>';
-  html += '<p>คุณสามารถล้างหรือตั้งคะแนนเองได้</p>';
-  html += `<button class='delete-btn' onclick='clearLeaderboard()'>🗑️ ลบ Leaderboard ทั้งหมด</button>`;
-  html += `<button class='add-btn' onclick='addManualScore()'>➕ เพิ่มคะแนนเอง</button>`;
+  html += '<p>ลบ Leaderboard ทีละบันทึกได้ทั้ง YCT 1 และ YCT 2</p>';
+  html += `<button class='delete-btn' onclick='deleteSingleYCT1()'>🗑️ ลบบันทึก YCT 1</button>`;
+  html += `<button class='delete-btn' onclick='deleteSingleYCT2()'>🗑️ ลบบันทึก YCT 2</button>`;
   html += `<button class='restart-btn' onclick='openLeaderboard()'>กลับไปดู Leaderboard</button>`;
   quizDiv.innerHTML = html;
 }
 
-function clearLeaderboard(){
-  if(confirm("คุณแน่ใจหรือไม่ว่าจะลบ Leaderboard ทั้งหมด?")){
-    localStorage.removeItem('yct_leaderboard_v1');
-    alert("ลบเรียบร้อยแล้ว");
-    openLeaderboard();
-  }
-}
-
-function addManualScore(){
-  const name = prompt("กรอกชื่อหรือลงเวลา:");
-  const score = prompt("กรอกคะแนนเป็นเปอร์เซ็นต์ (0-100):");
-  const exam = prompt("กรอกชุดข้อสอบ (yct1 หรือ yct2):");
-  if(!name || !score || !exam) return alert("ข้อมูลไม่ครบ");
+// --------------------- ลบทีละบันทึก ---------------------
+function deleteSingleYCT1(){
   const key = 'yct_leaderboard_v1';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data[exam]) data[exam] = {};
-  data[exam][name] = Number(score);
+  if(!data['yct1'] || Object.keys(data['yct1']).length === 0){
+    return alert("ไม่มีบันทึก YCT 1 ให้ลบ ❌");
+  }
+  let list = Object.entries(data['yct1']).map(([k,v],i)=>`${i+1}. ${k} — ${v}%`).join("\n");
+  let index = prompt("เลือกบันทึกที่จะลบ YCT 1:\n"+list+"\nกรอกหมายเลข:");
+  index = Number(index)-1;
+  if(index<0 || index>=Object.keys(data['yct1']).length) return alert("หมายเลขไม่ถูกต้อง");
+  const keyToDelete = Object.keys(data['yct1'])[index];
+  delete data['yct1'][keyToDelete];
   localStorage.setItem(key, JSON.stringify(data));
-  alert("เพิ่มคะแนนเรียบร้อย ✅");
-  openLeaderboard();
+  alert("ลบบันทึก YCT 1 เรียบร้อย ✅");
+  teacherPanel();
+}
+
+function deleteSingleYCT2(){
+  const key = 'yct_leaderboard_v1';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data['yct2'] || Object.keys(data['yct2']).length === 0){
+    return alert("ไม่มีบันทึก YCT 2 ให้ลบ ❌");
+  }
+  let list = Object.entries(data['yct2']).map(([k,v],i)=>`${i+1}. ${k} — ${v}%`).join("\n");
+  let index = prompt("เลือกบันทึกที่จะลบ YCT 2:\n"+list+"\nกรอกหมายเลข:");
+  index = Number(index)-1;
+  if(index<0 || index>=Object.keys(data['yct2']).length) return alert("หมายเลขไม่ถูกต้อง");
+  const keyToDelete = Object.keys(data['yct2'])[index];
+  delete data['yct2'][keyToDelete];
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("ลบบันทึก YCT 2 เรียบร้อย ✅");
+  teacherPanel();
 }
 
 // --------------------- เริ่ม ---------------------
