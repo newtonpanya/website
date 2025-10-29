@@ -267,6 +267,7 @@ function saveScore(){
   backHome();
 }
 function showLeaderboard(){
+  //alert('');
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("leaderboardScreen").classList.remove("hidden");
   const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
