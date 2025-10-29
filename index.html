@@ -3,315 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YCT Online Quiz</title>
+<title>YCT Online Quiz Version 1.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Noto Sans SC', Arial, sans-serif;
-    padding: 20px;
-    min-height: 100vh;
-    background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
-                url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-  }
-  h1 { text-align:center; color:#D32F2F; text-shadow:1px 1px 2px #fff; }
-  .timer { text-align:center; font-size:1.3rem; color:#B71C1C; margin-bottom:15px; font-weight:bold; }
-  .question { margin-bottom:20px; padding:20px; background:rgba(255,255,255,0.9); border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-  .options button { margin:5px 10px 5px 0; padding:10px 15px; border-radius:10px; border:none;
-                    cursor:pointer; background-color:#FFCDD2; transition:0.3s; color:#B71C1C; }
-  .options button:hover { background-color:#EF9A9A; }
-  .correct { background-color:#81C784 !important; color:#fff !important; }
-  .wrong { background-color:#E57373 !important; color:#fff !important; }
-  .next-btn, .restart-btn, .answer-btn, .toYCT2-btn, .leaderboard-btn, .teacher-btn, .delete-btn, .add-btn {
-    display:block; margin:15px auto; padding:10px 20px;
-    border:none; border-radius:10px; background-color:#F44336;
-    color:white; font-size:1rem; cursor:pointer;
-  }
-  .next-btn:hover, .restart-btn:hover, .answer-btn:hover,
-  .toYCT2-btn:hover, .leaderboard-btn:hover, .teacher-btn:hover, .delete-btn:hover, .add-btn:hover { background-color:#D32F2F; }
-  .answer-correct { color:#2E7D32; font-weight:bold; }
-  .answer-wrong { color:#C62828; font-weight:bold; }
-  h2 { text-align:center; color:#C62828; }
-  .footer { text-align:center; margin-top:20px; font-size:0.9rem; color:#333;}
+body {
+  font-family: 'Noto Sans SC', Arial, sans-serif;
+  padding: 20px;
+  background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
+  url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: rgba(255,255,255,0.95);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+h1 {
+  text-align: center;
+  color: #D32F2F;
+  text-shadow: 1px 1px 2px #fff;
+}
+h2 {
+  text-align: center;
+  color: #B71C1C;
+}
+button {
+  background-color: #FFD54F;
+  color: #B71C1C;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background-color: #FFEE58;
+}
+.correct {
+  background-color: #4CAF50 !important;
+  color: white !important;
+}
+.wrong {
+  background-color: #E53935 !important;
+  color: white !important;
+}
+.hidden {
+  display: none;
+}
+.timer {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #B71C1C;
+  margin-bottom: 10px;
+}
+.question {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.options button {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background: #FBC02D;
+}
 </style>
 </head>
 <body>
-<h1>YCT Online Quiz 🇨🇳</h1>
-<div class="timer" id="timer"></div>
-<div id="quiz"></div>
+<div class="container">
+  <h1>🧧 YCT Online Quiz 🧧</h1>
 
-<div class="footer">
-  <div>Website: <a href="https://newtonpanya.studio" target="_blank">newtonpanya.studio</a></div>
-  <div>Email: <a href="mailto:newton_panya@gmail.com">newton_panya@gmail.com</a></div>
+  <!-- หน้าเริ่มต้น -->
+  <div id="startScreen">
+    <p>แบบทดสอบภาษาจีน YCT ออนไลน์<br>
+    ระดับต้นถึงระดับ 2<br>
+    ⏰ จำกัดเวลา 60 วินาทีต่อข้อ<br>
+    📚 เลือกชุดข้อสอบ YCT1 (15 ข้อ) หรือ YCT2 (20 ข้อ)</p>
+    <button onclick="startQuiz('YCT1')">เริ่มทำ YCT 1</button>
+    <button onclick="startQuiz('YCT2')">เริ่มทำ YCT 2</button>
+    <button onclick="showLeaderboard()">🏆 ดูคะแนนทั้งหมด</button>
+    <button onclick="enterTeacherMode()">👩‍🏫 โหมดครู</button>
+  </div>
+
+  <!-- หน้าทำข้อสอบ -->
+  <div id="quizScreen" class="hidden">
+    <div class="timer" id="timer">เวลา: 60</div>
+    <div id="questionBox"></div>
+  </div>
+
+  <!-- หน้าผลลัพธ์ -->
+  <div id="resultScreen" class="hidden">
+    <h2>ผลคะแนน</h2>
+    <p id="scoreDisplay"></p>
+    <div id="answerList"></div>
+    <label>กรอกชื่อก่อนบันทึก: </label>
+    <input type="text" id="studentName" placeholder="ชื่อของคุณ">
+    <button onclick="saveScore()">💾 บันทึกคะแนน</button>
+    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+  </div>
+
+  <!-- Leaderboard -->
+  <div id="leaderboardScreen" class="hidden">
+    <h2>🏆 Leaderboard</h2>
+    <table id="leaderboardTable">
+      <thead><tr><th>ชื่อ</th><th>ชุด</th><th>คะแนน</th><th>เวลา</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+  </div>
+
+  <!-- โหมดครู -->
+  <div id="teacherScreen" class="hidden">
+    <h2>👩‍🏫 โหมดครู</h2>
+    <table id="teacherTable">
+      <thead><tr><th>ชื่อ</th><th>ชุด</th><th>คะแนน</th><th>เวลา</th><th>การจัดการ</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="addRecord()">➕ เพิ่ม</button>
+    <button onclick="clearAll()">🧹 เคลียร์ทั้งหมด</button>
+    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+  </div>
 </div>
 
 <script>
-// --------------------- ข้อมูลข้อสอบ ---------------------
-const yct1 = [
-  {text:"你好吗？",pinyin:"nǐ hǎo ma?",options:["สวัสดี","สบายดีไหม","ลาก่อน"],answer:1},
-  {text:"我很好。",pinyin:"wǒ hěn hǎo.",options:["ฉันไม่ดี","ฉันดีมาก","ฉันชื่อ"],answer:1},
-  {text:"谢谢",pinyin:"xièxie",options:["ขอโทษ","ขอบคุณ","ลาก่อน"],answer:1},
-  {text:"老师",pinyin:"lǎoshī",options:["นักเรียน","ครู","เพื่อน"],answer:1},
-  {text:"苹果",pinyin:"píngguǒ",options:["กล้วย","แอปเปิ้ล","แตงโม"],answer:1},
-];
+// ==== ชุดข้อสอบ ====
+const questions = {
+  YCT1: [
+    { q: "他是老师。tā shì lǎoshī. หมายถึงอะไร?", opts: ["เขาเป็นครู", "เขาเป็นนักเรียน", "เขาเป็นหมอ"], ans: 0 },
+    { q: "谢谢！xièxie! แปลว่าอะไร?", opts: ["สวัสดี", "ขอบคุณ", "ลาก่อน"], ans: 1 },
+    { q: "再见！zàijiàn!", opts: ["ลาก่อน", "สวัสดี", "ขอบคุณ"], ans: 0 },
+    { q: "妈妈 māma หมายถึง?", opts: ["พ่อ", "แม่", "พี่สาว"], ans: 1 },
+    { q: "我爱你 wǒ ài nǐ", opts: ["ฉันรักเธอ", "ฉันเกลียดเธอ", "สวัสดี"], ans: 0 },
+    { q: "他是谁？tā shì shuí?", opts: ["เขาอยู่ไหน", "เขาเป็นใคร", "เขาทำอะไร"], ans: 1 },
+    { q: "我喜欢苹果。", opts: ["ฉันชอบแอปเปิ้ล", "ฉันกินกล้วย", "ฉันไม่ชอบส้ม"], ans: 0 },
+    { q: "谢谢老师。", opts: ["ขอบคุณครู", "ลาก่อนครู", "ครูอยู่ไหน"], ans: 0 },
+    { q: "我叫明明。", opts: ["ฉันชื่อหมิงหมิง", "ฉันชื่อหงหง", "ฉันชื่ออาเต๋อ"], ans: 0 },
+    { q: "你好吗？", opts: ["เธออยู่ที่ไหน", "สบายดีไหม", "เธอทำอะไร"], ans: 1 },
+    { q: "我很好。", opts: ["ฉันดีมาก", "ฉันเหนื่อย", "ฉันเศร้า"], ans: 0 },
+    { q: "爸爸在家。", opts: ["พ่ออยู่บ้าน", "แม่อยู่บ้าน", "พ่ออยู่โรงเรียน"], ans: 0 },
+    { q: "我有一个哥哥。", opts: ["ฉันมีพี่ชายคนหนึ่ง", "ฉันไม่มีพี่ชาย", "ฉันมีน้องชาย"], ans: 0 },
+    { q: "我喜欢学习。", opts: ["ฉันชอบเรียน", "ฉันเกลียดเรียน", "ฉันอยากนอน"], ans: 0 },
+    { q: "谢谢你。", opts: ["สวัสดี", "ขอบคุณ", "ลาก่อน"], ans: 1 }
+  ],
+  YCT2: [
+    { q: "你叫什么名字？", opts: ["คุณชื่ออะไร", "คุณอยู่ที่ไหน", "คุณอายุเท่าไร"], ans: 0 },
+    { q: "我喜欢苹果。", opts: ["ฉันไม่ชอบแอปเปิ้ล", "ฉันชอบแอปเปิ้ล", "ฉันกินแอปเปิ้ล"], ans: 1 },
+    { q: "他几岁？", opts: ["เขาอายุเท่าไร", "เขาอยู่ไหน", "เขาชื่ออะไร"], ans: 0 },
+    { q: "今天星期几？", opts: ["วันนี้วันอะไร", "พรุ่งนี้วันอะไร", "เมื่อวานวันอะไร"], ans: 0 },
+    { q: "我在学校。", opts: ["ฉันอยู่โรงเรียน", "ฉันอยู่บ้าน", "ฉันไปตลาด"], ans: 0 },
+    { q: "现在几点？", opts: ["ตอนนี้กี่โมง", "วันนี้วันอะไร", "พรุ่งนี้กี่โมง"], ans: 0 },
+    { q: "我有两个姐姐。", opts: ["ฉันมีพี่สาวสองคน", "ฉันมีพี่ชายสองคน", "ฉันไม่มีพี่"], ans: 0 },
+    { q: "你会游泳吗？", opts: ["คุณว่ายน้ำได้ไหม", "คุณเต้นได้ไหม", "คุณวิ่งได้ไหม"], ans: 0 },
+    { q: "他在做什么？", opts: ["เขากำลังทำอะไร", "เขาอยู่ไหน", "เขาเป็นใคร"], ans: 0 },
+    { q: "明天见。", opts: ["พบกันพรุ่งนี้", "ลาก่อน", "สวัสดีตอนเช้า"], ans: 0 },
+    { q: "她很漂亮。", opts: ["เธอสวยมาก", "เธอสูงมาก", "เธออ้วนมาก"], ans: 0 },
+    { q: "你喜欢什么颜色？", opts: ["คุณชอบสีอะไร", "คุณอยู่ที่ไหน", "คุณอายุเท่าไร"], ans: 0 },
+    { q: "他在吃饭。", opts: ["เขากำลังกินข้าว", "เขากำลังนอน", "เขากำลังวิ่ง"], ans: 0 },
+    { q: "你在哪儿？", opts: ["คุณอยู่ที่ไหน", "คุณชื่ออะไร", "คุณกำลังทำอะไร"], ans: 0 },
+    { q: "我有一只狗。", opts: ["ฉันมีสุนัขหนึ่งตัว", "ฉันมีแมวหนึ่งตัว", "ฉันไม่มีสัตว์"], ans: 0 },
+    { q: "你家有几口人？", opts: ["บ้านคุณมีกี่คน", "บ้านคุณอยู่ที่ไหน", "บ้านคุณใหญ่ไหม"], ans: 0 },
+    { q: "他是我的朋友。", opts: ["เขาเป็นเพื่อนของฉัน", "เขาเป็นพี่ชายฉัน", "เขาเป็นครูของฉัน"], ans: 0 },
+    { q: "请坐。", opts: ["เชิญนั่ง", "เชิญกิน", "เชิญเข้า"], ans: 0 },
+    { q: "不要说话。", opts: ["อย่าพูด", "อย่ากิน", "อย่าเดิน"], ans: 0 },
+    { q: "谢谢老师。", opts: ["ขอบคุณครู", "ลาก่อนครู", "สวัสดีครู"], ans: 0 }
+  ]
+};
 
-const yct2 = [
-  {text:"他是谁？",pinyin:"tā shì shéi?",options:["เขาเป็นใคร","เขาทำอะไร","เขาอยู่ไหน"],answer:0},
-  {text:"我喜欢学习中文。",pinyin:"wǒ xǐhuān xuéxí zhōngwén.",options:["ฉันไม่ชอบภาษาจีน","ฉันชอบเรียนภาษาจีน","ฉันเรียนภาษาอังกฤษ"],answer:1},
-  {text:"她是我姐姐。",pinyin:"tā shì wǒ jiějie.",options:["เธอเป็นพี่สาวฉัน","เธอเป็นเพื่อนฉัน","เธอเป็นแม่ฉัน"],answer:0},
-  {text:"今天很冷。",pinyin:"jīntiān hěn lěng.",options:["วันนี้ร้อน","วันนี้หนาว","วันนี้อุ่น"],answer:1},
-  {text:"你住在哪儿？",pinyin:"nǐ zhù zài nǎr?",options:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณไปไหน"],answer:0},
-];
+// ==== ระบบจับเวลาและการทำข้อสอบ ====
+let currentSet="", currentQ=0, score=0, answers=[], timer, timeLeft=60;
 
-// --------------------- ตัวแปรหลัก ---------------------
-let currentExam = 'yct1';
-let currentIndex = 0;
-let score = 0;
-let timer;
-let timeLeft = 0;
-let isTeacher = false;
-
-// --------------------- ฟังก์ชันจับเวลา ---------------------
-function startTimer() {
-  clearInterval(timer);
-  const total = (currentExam === 'yct1' ? yct1.length : yct2.length) * 90;
-  timeLeft = total;
-  const t = document.getElementById('timer');
-  timer = setInterval(() => {
-    const m = Math.floor(timeLeft / 60);
-    const s = timeLeft % 60;
-    t.textContent = `⏰ เวลาเหลือ ${m} นาที ${s} วินาที`;
-    if (timeLeft-- <= 0) {
-      clearInterval(timer);
-      showResult();
-    }
-  }, 1000);
-}
-
-// --------------------- แสดงข้อสอบ ---------------------
-function startQuiz(exam) {
-  currentExam = exam;
-  currentIndex = 0;
-  score = 0;
-  startTimer();
+function startQuiz(set){
+  currentSet=set; currentQ=0; score=0; answers=[];
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
   showQuestion();
 }
-
-function showQuestion() {
-  const quizDiv = document.getElementById('quiz');
-  const data = currentExam === 'yct1' ? yct1 : yct2;
-  if (currentIndex >= data.length) { showResult(); return; }
-  const q = data[currentIndex];
-  let html = `<div class='question'><h2>ข้อที่ ${currentIndex+1}/${data.length}</h2>
-              <div>${q.text}</div><div>(${q.pinyin})</div><div class='options'>`;
-  q.options.forEach((opt,i)=>{
-    html += `<button onclick='selectAnswer(${i})'>${opt}</button>`;
-  });
-  html += "</div></div>";
-  quizDiv.innerHTML = html;
+function showQuestion(){
+  const q=questions[currentSet][currentQ];
+  if(!q) return finishQuiz();
+  document.getElementById("questionBox").innerHTML=`
+    <div class="question"><b>ข้อ ${currentQ+1}:</b> ${q.q}</div>
+    <div class="options">
+      ${q.opts.map((opt,i)=>`<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
+    </div>`;
+  resetTimer();
 }
-
-function selectAnswer(choice) {
-  const data = currentExam === 'yct1' ? yct1 : yct2;
-  const correct = data[currentIndex].answer;
-  const buttons = document.querySelectorAll('.options button');
-  buttons.forEach((b,i)=>{
-    if(i===correct) b.classList.add('correct');
-    if(i===choice && choice!==correct) b.classList.add('wrong');
-    b.disabled = true;
-  });
-  if(choice===correct) score++;
-  setTimeout(()=>{ currentIndex++; showQuestion(); }, 1000);
-}
-
-// --------------------- แสดงผลคะแนน ---------------------
-function showResult() {
+function resetTimer(){
   clearInterval(timer);
-  const quizDiv = document.getElementById('quiz');
-  const total = currentExam === 'yct1' ? yct1.length : yct2.length;
-  const percent = Math.round((score/total)*100);
-  const emoji = percent >= 80 ? '💯' : (percent >= 50 ? '😊' : '😢');
-
-  const studentName = prompt("กรุณากรอกชื่อของคุณ:") || "ไม่ระบุ";
-  saveScore(percent, studentName);
-
-  let html = `<h2>คุณได้ ${score}/${total} คะแนน ${emoji}</h2>`;
-  if(currentExam==='yct1'){
-    html += `<button class='toYCT2-btn' onclick="startQuiz('yct2')">ไปทำ YCT 2 ➡️</button>`;
-  }
-  html += `<button class='leaderboard-btn' onclick='openLeaderboard()'>Leaderboard</button>
-           <button class='restart-btn' onclick="startQuiz('${currentExam}')">ทำใหม่</button>`;
-  quizDiv.innerHTML = html;
+  timeLeft=60;
+  document.getElementById("timer").innerText="เวลา: 60";
+  timer=setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").innerText="เวลา: "+timeLeft;
+    if(timeLeft<=0){clearInterval(timer);nextQuestion();}
+  },1000);
 }
-
-// --------------------- บันทึกคะแนน ---------------------
-function saveScore(percent, name){
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data[currentExam]) data[currentExam] = [];
-  const now = new Date().toLocaleString('th-TH');
-  data[currentExam].push({name, score: percent, time: now});
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
-// --------------------- Leaderboard ---------------------
-function openLeaderboard(){
-  const quizDiv = document.getElementById('quiz');
-  const data = JSON.parse(localStorage.getItem('yct_leaderboard_v2')||'{}');
-  let html = '<h2>🏆 Leaderboard</h2>';
-  ['yct1','yct2'].forEach(ex=>{
-    html += `<h3>${ex.toUpperCase()}</h3>`;
-    const entries = data[ex] ? data[ex].sort((a,b)=>b.score-a.score).slice(0,10) : [];
-    if(entries.length===0) html += '<p>ยังไม่มีข้อมูล</p>';
-    else html += entries.map(e=>`<div>${e.name} — ${e.time} — ${e.score}%</div>`).join('');
+function checkAnswer(i){
+  clearInterval(timer);
+  const q=questions[currentSet][currentQ];
+  const btns=document.querySelectorAll(".options button");
+  btns.forEach((b,idx)=>{
+    if(idx===q.ans)b.classList.add("correct");
+    else if(idx===i)b.classList.add("wrong");
+    b.disabled=true;
   });
-  html += `<button class='teacher-btn' onclick='enterTeacherMode()'>โหมดครู 🧑‍🏫</button>`;
-  html += `<button class='restart-btn' onclick="startQuiz('yct1')">กลับไปทำข้อสอบ</button>`;
-  quizDiv.innerHTML = html;
+  if(i===q.ans)score++;
+  answers.push({q:q.q,correct:q.opts[q.ans],chosen:q.opts[i]||"ไม่ตอบ"});
+  setTimeout(nextQuestion,1000);
 }
-
-// --------------------- โหมดครู ---------------------
+function nextQuestion(){
+  currentQ++;
+  if(currentQ<questions[currentSet].length)showQuestion();
+  else finishQuiz();
+}
+function finishQuiz(){
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("scoreDisplay").innerText=`คุณได้ ${score}/${questions[currentSet].length} คะแนน`;
+  document.getElementById("answerList").innerHTML=answers.map(a=>
+    `<p>${a.q}<br>✅ ถูก: <b>${a.correct}</b><br>📝 คุณตอบ: ${a.chosen}</p>`).join("<hr>");
+}
+function saveScore(){
+  const name=document.getElementById("studentName").value.trim();
+  if(!name)return alert("กรุณากรอกชื่อ");
+  const timeNow=new Date();
+  const tStr=timeNow.toLocaleTimeString('th-TH')+" "+timeNow.toLocaleDateString('th-TH');
+  const record={name,set:currentSet,score,time:tStr};
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  data.push(record);
+  localStorage.setItem("yctScores",JSON.stringify(data));
+  alert("บันทึกสำเร็จ!");
+  backHome();
+}
+function showLeaderboard(){
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("leaderboardScreen").classList.remove("hidden");
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const tbody=document.querySelector("#leaderboardTable tbody");
+  tbody.innerHTML=data.map(r=>`<tr><td>${r.name}</td><td>${r.set}</td><td>${r.score}</td><td>${r.time}</td></tr>`).join("");
+}
 function enterTeacherMode(){
-  const password = prompt("กรอกรหัสครูเพื่อเข้าสู่โหมดควบคุม:");
-  if(password === "2222"){
-    isTeacher = true;
-    alert("เข้าสู่โหมดครูเรียบร้อย ✅");
-    teacherPanel();
-  } else {
-    alert("❌ รหัสไม่ถูกต้อง! เฉพาะครูเท่านั้นที่เข้าถึงได้");
-  }
+  const pw=prompt("กรอกรหัสผ่านครู:");
+  if(pw!=="2222")return alert("รหัสไม่ถูกต้อง");
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("teacherScreen").classList.remove("hidden");
+  renderTeacherTable();
 }
-
-function teacherPanel(){
-  const quizDiv = document.getElementById('quiz');
-  let html = '<h2>🧑‍🏫 โหมดครู</h2>';
-  html += '<p>สามารถเพิ่ม / ลบ / แก้ไข Leaderboard YCT 1 และ YCT 2 ได้</p>';
-  html += `<button class='add-btn' onclick='addScoreYCT1()'>➕ เพิ่มบันทึก YCT 1</button>`;
-  html += `<button class='delete-btn' onclick='deleteSingleYCT1()'>🗑️ ลบบันทึก YCT 1</button>`;
-  html += `<button class='add-btn' onclick='editScoreYCT1()'>✏️ แก้ไขบันทึก YCT 1</button>`;
-  html += `<button class='add-btn' onclick='addScoreYCT2()'>➕ เพิ่มบันทึก YCT 2</button>`;
-  html += `<button class='delete-btn' onclick='deleteSingleYCT2()'>🗑️ ลบบันทึก YCT 2</button>`;
-  html += `<button class='add-btn' onclick='editScoreYCT2()'>✏️ แก้ไขบันทึก YCT 2</button>`;
-  html += `<button class='restart-btn' onclick='openLeaderboard()'>กลับไปดู Leaderboard</button>`;
-  quizDiv.innerHTML = html;
+function renderTeacherTable(){
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const tbody=document.querySelector("#teacherTable tbody");
+  tbody.innerHTML=data.map((r,i)=>
+    `<tr><td contenteditable onblur="updateRecord(${i},'name',this.innerText)">${r.name}</td>
+    <td contenteditable onblur="updateRecord(${i},'set',this.innerText)">${r.set}</td>
+    <td contenteditable onblur="updateRecord(${i},'score',this.innerText)">${r.score}</td>
+    <td contenteditable onblur="updateRecord(${i},'time',this.innerText)">${r.time}</td>
+    <td><button onclick="deleteRecord(${i})">ลบ</button></td></tr>`).join("");
 }
-
-// --------------------- เพิ่มบันทึก ---------------------
-function addScoreYCT1(){
-  const name = prompt("กรอกชื่อผู้ทำ YCT 1:") || "ไม่ระบุ";
-  const percent = Number(prompt("กรอกคะแนน YCT 1 (0-100):"));
-  if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-  const time = prompt("กรอกวันที่/เวลา:", new Date().toLocaleString('th-TH')) || "";
-  if(!time) return;
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct1']) data['yct1'] = [];
-  data['yct1'].push({name, score: percent, time});
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("เพิ่มบันทึก YCT 1 เรียบร้อย ✅");
-  teacherPanel();
+function updateRecord(i,key,val){
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  data[i][key]=val;
+  localStorage.setItem("yctScores",JSON.stringify(data));
 }
-
-function addScoreYCT2(){
-  const name = prompt("กรอกชื่อผู้ทำ YCT 2:") || "ไม่ระบุ";
-  const percent = Number(prompt("กรอกคะแนน YCT 2 (0-100):"));
-  if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-  const time = prompt("กรอกวันที่/เวลา:", new Date().toLocaleString('th-TH')) || "";
-  if(!time) return;
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct2']) data['yct2'] = [];
-  data['yct2'].push({name, score: percent, time});
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("เพิ่มบันทึก YCT 2 เรียบร้อย ✅");
-  teacherPanel();
+function deleteRecord(i){
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  if(confirm("ลบรายการนี้?")){data.splice(i,1);localStorage.setItem("yctScores",JSON.stringify(data));renderTeacherTable();}
 }
-
-// --------------------- ลบทีละบันทึก ---------------------
-function deleteSingleYCT1(){
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct1'] || data['yct1'].length === 0){
-    return alert("ไม่มีบันทึก YCT 1 ให้ลบ ❌");
-  }
-  let list = data['yct1'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
-  let index = prompt("เลือกบันทึกที่จะลบ YCT 1:\n"+list+"\nกรอกหมายเลข:");
-  index = Number(index)-1;
-  if(index<0 || index>=data['yct1'].length) return alert("หมายเลขไม่ถูกต้อง");
-  data['yct1'].splice(index,1);
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("ลบบันทึก YCT 1 เรียบร้อย ✅");
-  teacherPanel();
-}
-
-function deleteSingleYCT2(){
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct2'] || data['yct2'].length === 0){
-    return alert("ไม่มีบันทึก YCT 2 ให้ลบ ❌");
-  }
-  let list = data['yct2'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
-  let index = prompt("เลือกบันทึกที่จะลบ YCT 2:\n"+list+"\nกรอกหมายเลข:");
-  index = Number(index)-1;
-  if(index<0 || index>=data['yct2'].length) return alert("หมายเลขไม่ถูกต้อง");
-  data['yct2'].splice(index,1);
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("ลบบันทึก YCT 2 เรียบร้อย ✅");
-  teacherPanel();
-}
-
-// --------------------- แก้ไขบันทึก ---------------------
-function editScoreYCT1(){
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct1'] || data['yct1'].length === 0){
-    return alert("ไม่มีบันทึก YCT 1 ให้แก้ไข ❌");
-  }
-  let list = data['yct1'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
-  let index = prompt("เลือกบันทึกที่จะ 'แก้ไข' YCT 1:\n"+list+"\nกรอกหมายเลข:");
-  index = Number(index)-1;
-  if(index<0 || index>=data['yct1'].length) return alert("หมายเลขไม่ถูกต้อง");
-  const item = data['yct1'][index];
-  const newName = prompt("ชื่อใหม่:", item.name) || item.name;
-  const newScore = Number(prompt("คะแนนใหม่ (0-100):", item.score));
-  if(isNaN(newScore) || newScore < 0 || newScore > 100) return alert("❌ คะแนนต้องเป็นตัวเลข 0-100");
-  const newTime = prompt("วันที่/เวลาใหม่:", item.time) || item.time;
-  data['yct1'][index] = { name: newName, score: newScore, time: newTime };
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("แก้ไขบันทึก YCT 1 สำเร็จ ✅");
-  teacherPanel();
-}
-
-function editScoreYCT2(){
-  const key = 'yct_leaderboard_v2';
-  const data = JSON.parse(localStorage.getItem(key)||'{}');
-  if(!data['yct2'] || data['yct2'].length === 0){
-    return alert("ไม่มีบันทึก YCT 2 ให้แก้ไข ❌");
-  }
-  let list = data['yct2'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
-  let index = prompt("เลือกบันทึกที่จะ 'แก้ไข' YCT 2:\n"+list+"\nกรอกหมายเลข:");
-  index = Number(index)-1;
-  if(index<0 || index>=data['yct2'].length) return alert("หมายเลขไม่ถูกต้อง");
-  const item = data['yct2'][index];
-  const newName = prompt("ชื่อใหม่:", item.name) || item.name;
-  const newScore = Number(prompt("คะแนนใหม่ (0-100):", item.score));
-  if(isNaN(newScore) || newScore < 0 || newScore > 100) return alert("❌ คะแนนต้องเป็นตัวเลข 0-100");
-  const newTime = prompt("วันที่/เวลาใหม่:", item.time) || item.time;
-  data['yct2'][index] = { name: newName, score: newScore, time: newTime };
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("แก้ไขบันทึก YCT 2 สำเร็จ ✅");
-  teacherPanel();
-}
-
-// --------------------- เริ่มต้น ---------------------
-document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('quiz').innerHTML = `
-    <h2>เริ่มทำข้อสอบ YCT</h2>
-    <button class='next-btn' onclick="startQuiz('yct1')">เริ่ม YCT 1</button>
-    <button class='leaderboard-btn' onclick='openLeaderboard()'>ดู Leaderboard</button>`;
-});
-</script>
-</body>
-</html>
+function addRecord(){
+  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const now=new Date();
+  const t=now.toLocaleTimeString('th-TH')+" "+now.toLocaleDateString('th-TH');
+  data.push({name:"นักเรียนใหม่",set:"YCT1",score:0,time:t});
+  localStorage.setItem("yctScores",JSON.stringify(data));
