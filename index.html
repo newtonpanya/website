@@ -200,7 +200,7 @@ const questions = {
   ]
 };
 
-// ==== ระบบจับเวลาและการทำข้อสอบ ====
+// ==== ระบบทำข้อสอบ ====
 let currentSet="", currentQ=0, score=0, answers=[], timer, timeLeft=60;
 
 function startQuiz(set){
@@ -209,100 +209,134 @@ function startQuiz(set){
   document.getElementById("quizScreen").classList.remove("hidden");
   showQuestion();
 }
+
 function showQuestion(){
-  const q=questions[currentSet][currentQ];
+  const q = questions[currentSet][currentQ];
   if(!q) return finishQuiz();
-  document.getElementById("questionBox").innerHTML=`
+  document.getElementById("questionBox").innerHTML = `
     <div class="question"><b>ข้อ ${currentQ+1}:</b> ${q.q}</div>
     <div class="options">
       ${q.opts.map((opt,i)=>`<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
     </div>`;
   resetTimer();
 }
+
 function resetTimer(){
   clearInterval(timer);
-  timeLeft=60;
-  document.getElementById("timer").innerText="เวลา: 60";
-  timer=setInterval(()=>{
+  timeLeft = 60;
+  document.getElementById("timer").innerText = "เวลา: 60";
+  timer = setInterval(()=>{
     timeLeft--;
-    document.getElementById("timer").innerText="เวลา: "+timeLeft;
-    if(timeLeft<=0){clearInterval(timer);nextQuestion();}
+    document.getElementById("timer").innerText = "เวลา: " + timeLeft;
+    if(timeLeft <= 0){clearInterval(timer); nextQuestion();}
   },1000);
 }
+
 function checkAnswer(i){
   clearInterval(timer);
-  const q=questions[currentSet][currentQ];
-  const btns=document.querySelectorAll(".options button");
+  const q = questions[currentSet][currentQ];
+  const btns = document.querySelectorAll(".options button");
   btns.forEach((b,idx)=>{
-    if(idx===q.ans)b.classList.add("correct");
-    else if(idx===i)b.classList.add("wrong");
+    if(idx===q.ans) b.classList.add("correct");
+    else if(idx===i) b.classList.add("wrong");
     b.disabled=true;
   });
-  if(i===q.ans)score++;
-  answers.push({q:q.q,correct:q.opts[q.ans],chosen:q.opts[i]||"ไม่ตอบ"});
+  if(i===q.ans) score++;
+  answers.push({q:q.q, correct:q.opts[q.ans], chosen:q.opts[i] || "ไม่ตอบ"});
   setTimeout(nextQuestion,1000);
 }
+
 function nextQuestion(){
   currentQ++;
-  if(currentQ<questions[currentSet].length)showQuestion();
+  if(currentQ < questions[currentSet].length) showQuestion();
   else finishQuiz();
 }
+
 function finishQuiz(){
   document.getElementById("quizScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.remove("hidden");
-  document.getElementById("scoreDisplay").innerText=`คุณได้ ${score}/${questions[currentSet].length} คะแนน`;
-  document.getElementById("answerList").innerHTML=answers.map(a=>
+  document.getElementById("scoreDisplay").innerText = `คุณได้ ${score}/${questions[currentSet].length} คะแนน`;
+  document.getElementById("answerList").innerHTML = answers.map(a=>
     `<p>${a.q}<br>✅ ถูก: <b>${a.correct}</b><br>📝 คุณตอบ: ${a.chosen}</p>`).join("<hr>");
 }
+
 function saveScore(){
-  const name=document.getElementById("studentName").value.trim();
-  if(!name)return alert("กรุณากรอกชื่อ");
-  const timeNow=new Date();
-  const tStr=timeNow.toLocaleTimeString('th-TH')+" "+timeNow.toLocaleDateString('th-TH');
-  const record={name,set:currentSet,score,time:tStr};
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const name = document.getElementById("studentName").value.trim();
+  if(!name) return alert("กรุณากรอกชื่อ");
+  const timeNow = new Date();
+  const tStr = timeNow.toLocaleTimeString('th-TH') + " " + timeNow.toLocaleDateString('th-TH');
+  const record = {name, set: currentSet, score, time: tStr};
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
   data.push(record);
-  localStorage.setItem("yctScores",JSON.stringify(data));
+  localStorage.setItem("yctScores", JSON.stringify(data));
   alert("บันทึกสำเร็จ!");
   backHome();
 }
+
+function backHome(){
+  document.getElementById("startScreen").classList.remove("hidden");
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("leaderboardScreen").classList.add("hidden");
+  document.getElementById("teacherScreen").classList.add("hidden");
+}
+
 function showLeaderboard(){
-  //alert('');
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("leaderboardScreen").classList.remove("hidden");
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const tbody=document.querySelector("#leaderboardTable tbody");
-  tbody.innerHTML=data.map(r=>`<tr><td>${r.name}</td><td>${r.set}</td><td>${r.score}</td><td>${r.time}</td></tr>`).join("");
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const tbody = document.querySelector("#leaderboardTable tbody");
+  tbody.innerHTML = data.map(r=>`<tr><td>${r.name}</td><td>${r.set}</td><td>${r.score}</td><td>${r.time}</td></tr>`).join("");
 }
+
+// ==== โหมดครู ====
 function enterTeacherMode(){
-  const pw=prompt("กรอกรหัสผ่านครู:");
-  if(pw!=="2222")return alert("รหัสไม่ถูกต้อง");
+  const pw = prompt("กรอกรหัสผ่านครู:");
+  if(pw!=="2222") return alert("รหัสไม่ถูกต้อง");
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("teacherScreen").classList.remove("hidden");
   renderTeacherTable();
 }
+
 function renderTeacherTable(){
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const tbody=document.querySelector("#teacherTable tbody");
-  tbody.innerHTML=data.map((r,i)=>
-    `<tr><td contenteditable onblur="updateRecord(${i},'name',this.innerText)">${r.name}</td>
-    <td contenteditable onblur="updateRecord(${i},'set',this.innerText)">${r.set}</td>
-    <td contenteditable onblur="updateRecord(${i},'score',this.innerText)">${r.score}</td>
-    <td contenteditable onblur="updateRecord(${i},'time',this.innerText)">${r.time}</td>
-    <td><button onclick="deleteRecord(${i})">ลบ</button></td></tr>`).join("");
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const tbody = document.querySelector("#teacherTable tbody");
+  tbody.innerHTML = data.map((r,i)=>
+    `<tr>
+      <td contenteditable onblur="updateRecord(${i},'name',this.innerText)">${r.name}</td>
+      <td contenteditable onblur="updateRecord(${i},'set',this.innerText)">${r.set}</td>
+      <td contenteditable onblur="updateRecord(${i},'score',this.innerText)">${r.score}</td>
+      <td contenteditable onblur="updateRecord(${i},'time',this.innerText)">${r.time}</td>
+      <td><button onclick="deleteRecord(${i})">ลบ</button></td>
+    </tr>`).join("");
 }
+
 function updateRecord(i,key,val){
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
-  data[i][key]=val;
-  localStorage.setItem("yctScores",JSON.stringify(data));
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
+  data[i][key] = val;
+  localStorage.setItem("yctScores", JSON.stringify(data));
 }
+
 function deleteRecord(i){
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
-  if(confirm("ลบรายการนี้?")){data.splice(i,1);localStorage.setItem("yctScores",JSON.stringify(data));renderTeacherTable();}
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
+  if(confirm("ลบรายการนี้?")){data.splice(i,1); localStorage.setItem("yctScores",JSON.stringify(data)); renderTeacherTable();}
 }
+
 function addRecord(){
-  const data=JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const now=new Date();
-  const t=now.toLocaleTimeString('th-TH')+" "+now.toLocaleDateString('th-TH');
-  data.push({name:"นักเรียนใหม่",set:"YCT1",score:0,time:t});
-  localStorage.setItem("yctScores",JSON.stringify(data));
+  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
+  const now = new Date();
+  const t = now.toLocaleTimeString('th-TH') + " " + now.toLocaleDateString('th-TH');
+  data.push({name:"นักเรียนใหม่", set:"YCT1", score:0, time:t});
+  localStorage.setItem("yctScores", JSON.stringify(data));
+  renderTeacherTable();
+}
+
+function clearAll(){
+  if(confirm("ลบทุกคะแนน?")){
+    localStorage.removeItem("yctScores");
+    renderTeacherTable();
+  }
+}
+</script>
+</body>
+</html>
