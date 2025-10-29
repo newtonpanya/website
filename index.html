@@ -55,11 +55,6 @@ const yct1 = [
   {text:"谢谢",pinyin:"xièxie",options:["ขอโทษ","ขอบคุณ","ลาก่อน"],answer:1},
   {text:"老师",pinyin:"lǎoshī",options:["นักเรียน","ครู","เพื่อน"],answer:1},
   {text:"苹果",pinyin:"píngguǒ",options:["กล้วย","แอปเปิ้ล","แตงโม"],answer:1},
-  {text:"热",pinyin:"rè",options:["หนาว","ยาก","ร้อน"],answer:2},
-  {text:"冷",pinyin:"lěng",options:["เย็น","ร้อน","เร็ว"],answer:0},
-  {text:"谢谢你！",pinyin:"xièxie nǐ!",options:["ขอบคุณ","ยินดี","ลาก่อน"],answer:0},
-  {text:"再见",pinyin:"zàijiàn",options:["สวัสดี","ลาก่อน","ขอโทษ"],answer:1},
-  {text:"我叫小明。",pinyin:"wǒ jiào Xiǎomíng.",options:["ฉันชื่อเสี่ยวหมิง","ฉันมาจากจีน","ฉันชอบเรียน"],answer:0},
 ];
 
 const yct2 = [
@@ -131,7 +126,7 @@ function selectAnswer(choice) {
   setTimeout(()=>{ currentIndex++; showQuestion(); }, 1000);
 }
 
-// --------------------- แสดงผลคะแนน และถามชื่อ ---------------------
+// --------------------- แสดงผลคะแนน ---------------------
 function showResult() {
   clearInterval(timer);
   const quizDiv = document.getElementById('quiz');
@@ -151,7 +146,7 @@ function showResult() {
   quizDiv.innerHTML = html;
 }
 
-// --------------------- บันทึกคะแนน พร้อมชื่อและเวลา ---------------------
+// --------------------- บันทึกคะแนน ---------------------
 function saveScore(percent, name){
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
@@ -201,7 +196,7 @@ function teacherPanel(){
   quizDiv.innerHTML = html;
 }
 
-// --------------------- เพิ่มบันทึก ---------------------
+// --------------------- เพิ่มบันทึก (บังคับกรอกวันที่) ---------------------
 function addScoreYCT1(){
   const name = prompt("กรอกชื่อผู้ทำ YCT 1:") || "ไม่ระบุ";
   const percentStr = prompt("กรอกคะแนน YCT 1 (0-100):");
@@ -209,8 +204,8 @@ function addScoreYCT1(){
   const percent = Number(percentStr);
   if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
 
-  let time = prompt("กรอกวันที่/เวลาที่ทำ (ปล่อยว่างใช้เวลาปัจจุบัน):");
-  if(!time) time = new Date().toLocaleString('th-TH');
+  const time = prompt("กรอกวันที่/เวลาที่ทำ (เช่น 29/10/2568 09:00):");
+  if(!time) return alert("❌ ต้องกรอกวันที่/เวลาก่อนบันทึก");
 
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
@@ -228,8 +223,8 @@ function addScoreYCT2(){
   const percent = Number(percentStr);
   if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
 
-  let time = prompt("กรอกวันที่/เวลาที่ทำ (ปล่อยว่างใช้เวลาปัจจุบัน):");
-  if(!time) time = new Date().toLocaleString('th-TH');
+  const time = prompt("กรอกวันที่/เวลาที่ทำ (เช่น 29/10/2568 09:00):");
+  if(!time) return alert("❌ ต้องกรอกวันที่/เวลาก่อนบันทึก");
 
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
