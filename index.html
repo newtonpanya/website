@@ -187,26 +187,24 @@ function enterTeacherMode(){
 function teacherPanel(){
   const quizDiv = document.getElementById('quiz');
   let html = '<h2>🧑‍🏫 โหมดครู</h2>';
-  html += '<p>สามารถเพิ่ม/ลบ Leaderboard YCT 1 และ YCT 2 ได้</p>';
+  html += '<p>สามารถเพิ่ม / ลบ / แก้ไข Leaderboard YCT 1 และ YCT 2 ได้</p>';
   html += `<button class='add-btn' onclick='addScoreYCT1()'>➕ เพิ่มบันทึก YCT 1</button>`;
   html += `<button class='delete-btn' onclick='deleteSingleYCT1()'>🗑️ ลบบันทึก YCT 1</button>`;
+  html += `<button class='add-btn' onclick='editScoreYCT1()'>✏️ แก้ไขบันทึก YCT 1</button>`;
   html += `<button class='add-btn' onclick='addScoreYCT2()'>➕ เพิ่มบันทึก YCT 2</button>`;
   html += `<button class='delete-btn' onclick='deleteSingleYCT2()'>🗑️ ลบบันทึก YCT 2</button>`;
+  html += `<button class='add-btn' onclick='editScoreYCT2()'>✏️ แก้ไขบันทึก YCT 2</button>`;
   html += `<button class='restart-btn' onclick='openLeaderboard()'>กลับไปดู Leaderboard</button>`;
   quizDiv.innerHTML = html;
 }
 
-// --------------------- เพิ่มบันทึก (บังคับกรอกวันที่) ---------------------
+// --------------------- เพิ่มบันทึก ---------------------
 function addScoreYCT1(){
   const name = prompt("กรอกชื่อผู้ทำ YCT 1:") || "ไม่ระบุ";
-  const percentStr = prompt("กรอกคะแนน YCT 1 (0-100):");
-  if(percentStr === null) return;
-  const percent = Number(percentStr);
+  const percent = Number(prompt("กรอกคะแนน YCT 1 (0-100):"));
   if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-
-  const time = prompt("กรอกวันที่/เวลาที่ทำ (เช่น 29/10/2568 09:00):");
-  if(!time) return alert("❌ ต้องกรอกวันที่/เวลาก่อนบันทึก");
-
+  const time = prompt("กรอกวันที่/เวลา:", new Date().toLocaleString('th-TH')) || "";
+  if(!time) return;
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
   if(!data['yct1']) data['yct1'] = [];
@@ -218,14 +216,10 @@ function addScoreYCT1(){
 
 function addScoreYCT2(){
   const name = prompt("กรอกชื่อผู้ทำ YCT 2:") || "ไม่ระบุ";
-  const percentStr = prompt("กรอกคะแนน YCT 2 (0-100):");
-  if(percentStr === null) return;
-  const percent = Number(percentStr);
+  const percent = Number(prompt("กรอกคะแนน YCT 2 (0-100):"));
   if(isNaN(percent) || percent < 0 || percent > 100) return alert("กรอกตัวเลข 0-100 เท่านั้น");
-
-  const time = prompt("กรอกวันที่/เวลาที่ทำ (เช่น 29/10/2568 09:00):");
-  if(!time) return alert("❌ ต้องกรอกวันที่/เวลาก่อนบันทึก");
-
+  const time = prompt("กรอกวันที่/เวลา:", new Date().toLocaleString('th-TH')) || "";
+  if(!time) return;
   const key = 'yct_leaderboard_v2';
   const data = JSON.parse(localStorage.getItem(key)||'{}');
   if(!data['yct2']) data['yct2'] = [];
@@ -268,8 +262,56 @@ function deleteSingleYCT2(){
   teacherPanel();
 }
 
-// --------------------- เริ่ม ---------------------
-startQuiz('yct1');
+// --------------------- แก้ไขบันทึก ---------------------
+function editScoreYCT1(){
+  const key = 'yct_leaderboard_v2';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data['yct1'] || data['yct1'].length === 0){
+    return alert("ไม่มีบันทึก YCT 1 ให้แก้ไข ❌");
+  }
+  let list = data['yct1'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
+  let index = prompt("เลือกบันทึกที่จะ 'แก้ไข' YCT 1:\n"+list+"\nกรอกหมายเลข:");
+  index = Number(index)-1;
+  if(index<0 || index>=data['yct1'].length) return alert("หมายเลขไม่ถูกต้อง");
+  const item = data['yct1'][index];
+  const newName = prompt("ชื่อใหม่:", item.name) || item.name;
+  const newScore = Number(prompt("คะแนนใหม่ (0-100):", item.score));
+  if(isNaN(newScore) || newScore < 0 || newScore > 100) return alert("❌ คะแนนต้องเป็นตัวเลข 0-100");
+  const newTime = prompt("วันที่/เวลาใหม่:", item.time) || item.time;
+  data['yct1'][index] = { name: newName, score: newScore, time: newTime };
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("แก้ไขบันทึก YCT 1 สำเร็จ ✅");
+  teacherPanel();
+}
+
+function editScoreYCT2(){
+  const key = 'yct_leaderboard_v2';
+  const data = JSON.parse(localStorage.getItem(key)||'{}');
+  if(!data['yct2'] || data['yct2'].length === 0){
+    return alert("ไม่มีบันทึก YCT 2 ให้แก้ไข ❌");
+  }
+  let list = data['yct2'].map((e,i)=>`${i+1}. ${e.name} — ${e.time} — ${e.score}%`).join("\n");
+  let index = prompt("เลือกบันทึกที่จะ 'แก้ไข' YCT 2:\n"+list+"\nกรอกหมายเลข:");
+  index = Number(index)-1;
+  if(index<0 || index>=data['yct2'].length) return alert("หมายเลขไม่ถูกต้อง");
+  const item = data['yct2'][index];
+  const newName = prompt("ชื่อใหม่:", item.name) || item.name;
+  const newScore = Number(prompt("คะแนนใหม่ (0-100):", item.score));
+  if(isNaN(newScore) || newScore < 0 || newScore > 100) return alert("❌ คะแนนต้องเป็นตัวเลข 0-100");
+  const newTime = prompt("วันที่/เวลาใหม่:", item.time) || item.time;
+  data['yct2'][index] = { name: newName, score: newScore, time: newTime };
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("แก้ไขบันทึก YCT 2 สำเร็จ ✅");
+  teacherPanel();
+}
+
+// --------------------- เริ่มต้น ---------------------
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('quiz').innerHTML = `
+    <h2>เริ่มทำข้อสอบ YCT</h2>
+    <button class='next-btn' onclick="startQuiz('yct1')">เริ่ม YCT 1</button>
+    <button class='leaderboard-btn' onclick='openLeaderboard()'>ดู Leaderboard</button>`;
+});
 </script>
 </body>
 </html>
