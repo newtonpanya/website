@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YCT Online Quiz Version 1.0</title>
+<title>🧧 YCT Online Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
 body {
@@ -107,7 +107,6 @@ th {
   <!-- หน้าเริ่มต้น -->
   <div id="startScreen">
     <p>แบบทดสอบภาษาจีน YCT ออนไลน์<br>
-    ระดับต้นถึงระดับ 2<br>
     ⏰ จำกัดเวลา 60 วินาทีต่อข้อ<br>
     📚 เลือกชุดข้อสอบ YCT1 (15 ข้อ) หรือ YCT2 (20 ข้อ)</p>
     <button onclick="startQuiz('YCT1')">เริ่มทำ YCT 1</button>
@@ -157,46 +156,46 @@ th {
 </div>
 
 <script>
-// ==== ชุดข้อสอบ ====
+// ==== คำถาม ====
 const questions = {
   YCT1: [
-    { q: "他是老师。tā shì lǎoshī. หมายถึงอะไร?", opts: ["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans: 0 },
-    { q: "谢谢！xièxie! แปลว่าอะไร?", opts: ["สวัสดี","ขอบคุณ","ลาก่อน"], ans: 1 },
-    { q: "再见！zàijiàn!", opts: ["ลาก่อน","สวัสดี","ขอบคุณ"], ans: 0 },
-    { q: "妈妈 māma หมายถึง?", opts: ["พ่อ","แม่","พี่สาว"], ans: 1 },
-    { q: "我爱你 wǒ ài nǐ", opts: ["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans: 0 },
-    { q: "他是谁？tā shì shuí?", opts: ["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans: 1 },
-    { q: "我喜欢苹果。wǒ xǐhuan píngguǒ", opts: ["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans: 0 },
-    { q: "谢谢老师。xièxie lǎoshī", opts: ["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans: 0 },
-    { q: "我叫明明。wǒ jiào míngmíng", opts: ["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans: 0 },
-    { q: "你好吗？nǐ hǎo ma?", opts: ["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans: 1 },
-    { q: "我很好。wǒ hěn hǎo", opts: ["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans: 0 },
-    { q: "爸爸在家。bàba zài jiā", opts: ["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans: 0 },
-    { q: "我有一个哥哥。wǒ yǒu yī gè gēge", opts: ["ฉันมีพี่ชายคนหนึ่ง","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans: 0 },
-    { q: "我喜欢学习。wǒ xǐhuan xuéxí", opts: ["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans: 0 },
-    { q: "谢谢你。xièxie nǐ", opts: ["สวัสดี","ขอบคุณ","ลาก่อน"], ans: 1 }
+    { q:"他是老师。tā shì lǎoshī.", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0 },
+    { q:"谢谢！xièxie!", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1 },
+    { q:"再见！zàijiàn!", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0 },
+    { q:"妈妈 māma หมายถึง?", opts:["พ่อ","แม่","พี่สาว"], ans:1 },
+    { q:"我爱你 wǒ ài nǐ", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0 },
+    { q:"他是谁？tā shì shuí?", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1 },
+    { q:"我喜欢苹果。wǒ xǐhuan píngguǒ", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0 },
+    { q:"谢谢老师。xièxie lǎoshī", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0 },
+    { q:"我叫明明。wǒ jiào míngmíng", opts:["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans:0 },
+    { q:"你好吗？nǐ hǎo ma?", opts:["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans:1 },
+    { q:"我很好。wǒ hěn hǎo", opts:["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans:0 },
+    { q:"爸爸在家。bàba zài jiā", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans:0 },
+    { q:"我有一个哥哥。wǒ yǒu yī gè gēge", opts:["ฉันมีพี่ชายคนหนึ่ง","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0 },
+    { q:"我喜欢学习。wǒ xǐhuan xuéxí", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0 },
+    { q:"谢谢你。xièxie nǐ", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1 }
   ],
   YCT2: [
-    { q: "你叫什么名字？nǐ jiào shénme míngzì ？", opts: ["คุณชื่ออะไร", "คุณอยู่ที่ไหน", "คุณอายุเท่าไร"], ans: 0 },
-    { q: "我喜欢苹果。wǒ xǐhuān píngguǒ 。", opts: ["ฉันไม่ชอบแอปเปิ้ล", "ฉันชอบแอปเปิ้ล", "ฉันกินแอปเปิ้ล"], ans: 1 },
-    { q: "他几岁？tā jǐ suì ?", opts: ["เขาอายุเท่าไร", "เขาอยู่ไหน", "เขาชื่ออะไร"], ans: 0 },
-    { q: "今天星期几？jīntiān xīngqī jǐ ?", opts: ["วันนี้วันอะไร", "พรุ่งนี้วันอะไร", "เมื่อวานวันอะไร"], ans: 0 },
-    { q: "我在学校。wǒ zài xuéxiào 。", opts: ["ฉันอยู่โรงเรียน", "ฉันอยู่บ้าน", "ฉันไปตลาด"], ans: 0 },
-    { q: "现在几点？xiànzài jǐ diǎn ?", opts: ["ตอนนี้กี่โมง", "วันนี้วันอะไร", "พรุ่งนี้กี่โมง"], ans: 0 },
-    { q: "我有两个姐姐。wǒ yǒu liǎng gè jiějie 。", opts: ["ฉันมีพี่สาวสองคน", "ฉันมีพี่ชายสองคน", "ฉันไม่มีพี่"], ans: 0 },
-    { q: "你会游泳吗？nǐ huì yóuyǒng ma ?", opts: ["คุณว่ายน้ำได้ไหม", "คุณเต้นได้ไหม", "คุณวิ่งได้ไหม"], ans: 0 },
-    { q: "他在做什么？tā zài zuò shénme ?", opts: ["เขากำลังทำอะไร", "เขาอยู่ไหน", "เขาเป็นใคร"], ans: 0 },
-    { q: "明天见。míngtiān jiàn 。", opts: ["พบกันพรุ่งนี้", "ลาก่อน", "สวัสดีตอนเช้า"], ans: 0 },
-    { q: "她很漂亮。tā hěn piàoliang 。", opts: ["เธอสวยมาก", "เธอสูงมาก", "เธออ้วนมาก"], ans: 0 },
-    { q: "你喜欢什么颜色？nǐ xǐhuān shénme yánsè ?", opts: ["คุณชอบสีอะไร", "คุณอยู่ที่ไหน", "คุณอายุเท่าไร"], ans: 0 },
-    { q: "他在吃饭。tā zài chīfàn 。", opts: ["เขากำลังกินข้าว", "เขากำลังนอน", "เขากำลังวิ่ง"], ans: 0 },
-    { q: "你在哪儿？nǐ zài nǎr ?", opts: ["คุณอยู่ที่ไหน", "คุณชื่ออะไร", "คุณกำลังทำอะไร"], ans: 0 },
-    { q: "我有一只狗。wǒ yǒu yì zhī gǒu 。", opts: ["ฉันมีสุนัขหนึ่งตัว", "ฉันมีแมวหนึ่งตัว", "ฉันไม่มีสัตว์"], ans: 0 },
-    { q: "你家有几口人？nǐ jiā yǒu jǐ kǒu rén ?", opts: ["บ้านคุณมีกี่คน", "บ้านคุณอยู่ที่ไหน", "บ้านคุณใหญ่ไหม"], ans: 0 },
-    { q: "他是我的朋友。tā shì wǒ de péngyou 。", opts: ["เขาเป็นเพื่อนของฉัน", "เขาเป็นพี่ชายฉัน", "เขาเป็นครูของฉัน"], ans: 0 },
-    { q: "请坐。qǐng zuò 。", opts: ["เชิญนั่ง", "เชิญกิน", "เชิญเข้า"], ans: 0 },
-    { q: "不要说话。bùyào shuōhuà 。", opts: ["อย่าพูด", "อย่ากิน", "อย่าเดิน"], ans: 0 },
-    { q: "谢谢老师。xièxiè lǎoshī 。", opts: ["ขอบคุณครู", "ลาก่อนครู", "สวัสดีครู"], ans: 0 }
+    { q:"你叫什么名字？nǐ jiào shénme míngzì?", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0 },
+    { q:"我喜欢苹果。wǒ xǐhuān píngguǒ。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1 },
+    { q:"他几岁？tā jǐ suì?", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0 },
+    { q:"今天星期几？jīntiān xīngqī jǐ?", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0 },
+    { q:"我在学校。wǒ zài xuéxiào。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0 },
+    { q:"现在几点？xiànzài jǐ diǎn?", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0 },
+    { q:"我有两个姐姐。wǒ yǒu liǎng gè jiějie。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0 },
+    { q:"你会游泳吗？nǐ huì yóuyǒng ma?", opts:["คุณว่ายน้ำได้ไหม","คุณเต้นได้ไหม","คุณวิ่งได้ไหม"], ans:0 },
+    { q:"他在做什么？tā zài zuò shénme?", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0 },
+    { q:"明天见。míngtiān jiàn。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0 },
+    { q:"她很漂亮。tā hěn piàoliang。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0 },
+    { q:"你喜欢什么颜色？nǐ xǐhuān shénme yánsè?", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0 },
+    { q:"他在吃饭。tā zài chīfàn。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0 },
+    { q:"你在哪儿？nǐ zài nǎr?", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0 },
+    { q:"我有一只狗。wǒ yǒu yì zhī gǒu。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0 },
+    { q:"你家有几口人？nǐ jiā yǒu jǐ kǒu rén?", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0 },
+    { q:"他是我的朋友。tā shì wǒ de péngyou。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0 },
+    { q:"请坐。qǐng zuò。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0 },
+    { q:"不要说话。bùyào shuōhuà。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0 },
+    { q:"谢谢老师。xièxiè lǎoshī。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0 }
   ]
 };
 
@@ -308,31 +307,35 @@ function renderTeacherTable(){
       <td contenteditable onblur="updateRecord(${i},'score',this.innerText)">${r.score}</td>
       <td contenteditable onblur="updateRecord(${i},'time',this.innerText)">${r.time}</td>
       <td><button onclick="deleteRecord(${i})">ลบ</button></td>
-    </tr>`).join("");
+    </tr>`
+  ).join("");
 }
 
-function updateRecord(i,key,val){
+function updateRecord(i,field,value){
   const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  data[i][key] = val;
+  data[i][field] = value;
   localStorage.setItem("yctScores", JSON.stringify(data));
 }
 
 function deleteRecord(i){
+  if(!confirm("ลบข้อมูลนี้?")) return;
   const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  if(confirm("ลบรายการนี้?")){data.splice(i,1); localStorage.setItem("yctScores",JSON.stringify(data)); renderTeacherTable();}
+  data.splice(i,1);
+  localStorage.setItem("yctScores", JSON.stringify(data));
+  renderTeacherTable();
 }
 
 function addRecord(){
   const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const now = new Date();
-  const t = now.toLocaleTimeString('th-TH') + " " + now.toLocaleDateString('th-TH');
-  data.push({name:"นักเรียนใหม่", set:"YCT1", score:0, time:t});
+  const timeNow = new Date();
+  const tStr = timeNow.toLocaleTimeString('th-TH') + " " + timeNow.toLocaleDateString('th-TH');
+  data.push({name:"ใหม่", set:"YCT1", score:0, time:tStr});
   localStorage.setItem("yctScores", JSON.stringify(data));
   renderTeacherTable();
 }
 
 function clearAll(){
-  if(confirm("ลบทุกคะแนน?")){
+  if(confirm("ต้องการลบข้อมูลทั้งหมดหรือไม่?")){
     localStorage.removeItem("yctScores");
     renderTeacherTable();
   }
