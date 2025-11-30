@@ -1,345 +1,544 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🧧 YCT Online Quiz</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🧧 YCT Online Quiz (Reading + Listening)</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: 'Noto Sans SC', Arial, sans-serif;
-  padding: 20px;
-  background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
-  url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
-}
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: rgba(255,255,255,0.95);
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-h1 {
-  text-align: center;
-  color: #D32F2F;
-  text-shadow: 1px 1px 2px #fff;
-}
-h2 {
-  text-align: center;
-  color: #B71C1C;
-}
-button {
-  background-color: #FFD54F;
-  color: #B71C1C;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background-color: #FFEE58;
-}
-.correct {
-  background-color: #4CAF50 !important;
-  color: white !important;
-}
-.wrong {
-  background-color: #E53935 !important;
-  color: white !important;
-}
-.hidden {
-  display: none;
-}
-.timer {
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #B71C1C;
-  margin-bottom: 10px;
-}
-.question {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  background: rgba(255,255,255,0.9);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-.options button {
-  display: block;
-  width: 100%;
-  margin: 6px 0;
-  padding: 10px;
-}
-input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-th {
-  background: #FBC02D;
-}
+  :root{
+    --bg:#E8F5FF; --card:#ffffff; --accent:#0288D1; --accent-2:#03A9F4;
+    --good:#4CAF50; --bad:#E53935; --hint:#1976D2; --muted:#666;
+  }
+  body{
+    font-family: "Noto Sans SC", "Arial", sans-serif;
+    background: linear-gradient(180deg, #f4fbff 0%, var(--bg) 100%);
+    margin:0; padding:20px;
+    min-height:100vh;
+  }
+  .container{ max-width:980px; margin:0 auto; background:var(--card); padding:22px; border-radius:14px;
+    box-shadow:0 6px 22px rgba(3,64,120,0.08);
+  }
+  h1{ text-align:center; color:var(--accent); margin:0 0 12px 0; }
+  p.lead{ text-align:center; color:var(--muted); margin-top:6px; }
+  .flex{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:14px 0; }
+  button{ background:var(--accent-2); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer;
+    font-weight:600; box-shadow:0 4px 10px rgba(3,169,244,0.12);
+  }
+  button.ghost{ background:#fff; color:var(--accent-2); border:1px solid var(--accent-2); }
+  .hidden{ display:none !important; }
+  .card{ background:linear-gradient(180deg,#fff,#fbfeff); border-radius:12px; padding:14px; box-shadow:0 4px 14px rgba(2,136,209,0.04); }
+  .timer{ text-align:center; font-weight:700; color:var(--accent); font-size:1.1rem; margin-bottom:12px; }
+  .question{ font-size:1.15rem; padding:10px 12px; border-radius:10px; background:rgba(2,136,209,0.05); margin-bottom:10px; }
+  .options button{ display:block; width:100%; margin:8px 0; padding:10px; border-radius:8px; text-align:left; background:#fff; border:1px solid #e6f4ff; color:#013e5a; }
+  .options button.correct{ background:var(--good); color:#fff; border-color:transparent; }
+  .options button.wrong{ background:var(--bad); color:#fff; border-color:transparent; }
+  .options button.answer{ background:#E3F2FD; color:var(--hint); border-color:transparent; }
+  .meta{ display:flex; gap:10px; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+  input[type="text"]{ padding:8px 10px; border-radius:8px; border:1px solid #ddd; width:calc(100% - 16px); }
+  table{ width:100%; border-collapse:collapse; margin-top:12px; }
+  th,td{ padding:8px; border:1px solid #e9f4ff; text-align:center; }
+  th{ background:linear-gradient(90deg,var(--accent-2),var(--accent)); color:#fff; }
+  .small{ font-size:0.9rem; color:var(--muted); }
+  .center{ text-align:center; }
+  .badge{ display:inline-block; padding:6px 8px; border-radius:8px; background:#fff; border:1px solid #e6f4ff; color:var(--accent); font-weight:600; }
+  .result-good{ color:var(--good); font-weight:700; }
+  .result-bad{ color:var(--bad); font-weight:700; }
+  .controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  footer{ margin-top:14px; text-align:center; color:var(--muted); font-size:0.9rem; }
+  .play-btn{ background:#fff; color:var(--accent-2); border:1px solid rgba(3,169,244,0.25); padding:8px 10px; border-radius:8px; }
+  @media (min-width:700px){
+    .options button{ width:49%; display:inline-block; }
+  }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>🧧 YCT Online Quiz 🧧</h1>
+  <h1>🧧 YCT Online Quiz</h1>
+  <p class="lead small">เลือกชุด => ระบบจะเล่นพาร์ท ฟัง(听力) ก่อน แล้วต่อด้วย อ่าน(阅读) — เสียงเป็นผู้หญิง (TTS)</p>
 
-  <!-- หน้าเริ่มต้น -->
-  <div id="startScreen">
-    <p>แบบทดสอบภาษาจีน YCT ออนไลน์<br>
-    ⏰ จำกัดเวลา 60 วินาทีต่อข้อ<br>
-    📚 เลือกชุดข้อสอบ YCT1 (15 ข้อ) หรือ YCT2 (20 ข้อ)</p>
-    <button onclick="startQuiz('YCT1')">เริ่มทำ YCT 1</button>
-    <button onclick="startQuiz('YCT2')">เริ่มทำ YCT 2</button>
-    <button onclick="showLeaderboard()">🏆 ดูคะแนนทั้งหมด</button>
-    <button onclick="enterTeacherMode()">👩‍🏫 โหมดครู</button>
+  <!-- Start -->
+  <div id="startScreen" class="card">
+    <div class="flex">
+      <button onclick="beginSet('YCT1')">เริ่ม YCT1 (听力20 + 阅读15)</button>
+      <button onclick="beginSet('YCT2')">เริ่ม YCT2 (听力20 + 阅读20)</button>
+      <button class="ghost" onclick="showLeaderboard()">🏆 ดู Leaderboard</button>
+      <button class="ghost" onclick="enterTeacherMode()">👩‍🏫 โหมดครู</button>
+    </div>
+    <div class="flex center">
+      <div class="badge">เวลา / ข้อ = 60 วินาที</div>
+      <div class="badge">ผ่าน ≥ 120 / 200</div>
+      <div class="badge">เก็บข้อมูล: localStorage</div>
+    </div>
   </div>
 
-  <!-- หน้าทำข้อสอบ -->
-  <div id="quizScreen" class="hidden">
-    <div class="timer" id="timer">เวลา: 60</div>
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="card hidden">
+    <div class="meta">
+      <div class="timer" id="timer">เวลา: 60</div>
+      <div>
+        <button class="play-btn" id="playAudioBtn" title="เล่นเสียง" onclick="playCurrentTTS()">🔊 ฟังอีกครั้ง</button>
+        <span class="small" id="partLabel"></span>
+      </div>
+    </div>
+
     <div id="questionBox"></div>
+    <div class="controls" id="controlsRow"></div>
   </div>
 
-  <!-- หน้าผลลัพธ์ -->
-  <div id="resultScreen" class="hidden">
-    <h2>ผลคะแนน</h2>
-    <p id="scoreDisplay"></p>
+  <!-- Result Screen -->
+  <div id="resultScreen" class="card hidden">
+    <h2 class="center">ผลลัพธ์</h2>
+    <p id="scoreSummary" class="center"></p>
+    <div class="center small" id="passFail"></div>
+
+    <h3>ตารางเฉลย</h3>
     <div id="answerList"></div>
-    <label>กรอกชื่อก่อนบันทึก: </label>
-    <input type="text" id="studentName" placeholder="ชื่อของคุณ">
-    <button onclick="saveScore()">💾 บันทึกคะแนน</button>
-    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+
+    <div style="margin-top:12px;">
+      <label>กรอกชื่อก่อนบันทึก:</label>
+      <input id="studentName" type="text" placeholder="ชื่อของคุณ (จำเป็น)">
+      <div style="margin-top:10px;" class="flex">
+        <button onclick="saveResult()">💾 บันทึกคะแนน</button>
+        <button class="ghost" onclick="backToHome()">🏠 กลับหน้าหลัก</button>
+        <button class="ghost" onclick="showLeaderboard()">🏆 ดู Leaderboard</button>
+      </div>
+    </div>
   </div>
 
   <!-- Leaderboard -->
-  <div id="leaderboardScreen" class="hidden">
-    <h2>🏆 Leaderboard</h2>
+  <div id="leaderboardScreen" class="card hidden">
+    <h2 class="center">🏆 Leaderboard</h2>
     <table id="leaderboardTable">
-      <thead><tr><th>ชื่อ</th><th>ชุด</th><th>คะแนน</th><th>เวลา</th></tr></thead>
+      <thead><tr><th>ชื่อ</th><th>คะแนนดิบ</th><th>คะแนนจริง</th><th>เวลา</th><th>จัดการ</th></tr></thead>
       <tbody></tbody>
     </table>
-    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+    <div style="margin-top:10px;" class="flex center">
+      <button class="ghost" onclick="clearLocalScores()">🧹 เคลียร์ทั้งหมด</button>
+      <button class="ghost" onclick="backToHome()">🏠 กลับหน้าหลัก</button>
+    </div>
   </div>
 
-  <!-- โหมดครู -->
-  <div id="teacherScreen" class="hidden">
-    <h2>👩‍🏫 โหมดครู</h2>
+  <!-- Teacher -->
+  <div id="teacherScreen" class="card hidden">
+    <h2 class="center">👩‍🏫 โหมดครู</h2>
+    <div class="small center">รหัสครูที่ใช้: <b>2222</b></div>
     <table id="teacherTable">
-      <thead><tr><th>ชื่อ</th><th>ชุด</th><th>คะแนน</th><th>เวลา</th><th>การจัดการ</th></tr></thead>
+      <thead><tr><th>ชื่อ</th><th>คะแนนดิบ</th><th>คะแนนจริง</th><th>เวลา</th><th>จัดการ</th></tr></thead>
       <tbody></tbody>
     </table>
-    <button onclick="addRecord()">➕ เพิ่ม</button>
-    <button onclick="clearAll()">🧹 เคลียร์ทั้งหมด</button>
-    <button onclick="backHome()">🏠 กลับหน้าหลัก</button>
+    <div style="margin-top:8px;" class="flex center">
+      <button onclick="addRecord()">➕ เพิ่มเรคคอร์ดใหม่</button>
+      <button class="ghost" onclick="backToHome()">🏠 กลับหน้าหลัก</button>
+    </div>
   </div>
+
+  <footer>สร้างโดย YCT Quiz Generator — ใช้ localStorage เก็บข้อมูลเท่านั้น</footer>
 </div>
 
 <script>
-// ==== คำถาม ====
+/* ====== ข้อมูลคำถาม (ใช้ชุดคำถามต้นฉบับ ปรับได้ตามต้องการ) ====== */
 const questions = {
-  YCT1: [
-    { q:"他是老师。tā shì lǎoshī.", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0 },
-    { q:"谢谢！xièxie!", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1 },
-    { q:"再见！zàijiàn!", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0 },
-    { q:"妈妈 māma หมายถึง?", opts:["พ่อ","แม่","พี่สาว"], ans:1 },
-    { q:"我爱你 wǒ ài nǐ", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0 },
-    { q:"他是谁？tā shì shuí?", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1 },
-    { q:"我喜欢苹果。wǒ xǐhuan píngguǒ", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0 },
-    { q:"谢谢老师。xièxie lǎoshī", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0 },
-    { q:"我叫明明。wǒ jiào míngmíng", opts:["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans:0 },
-    { q:"你好吗？nǐ hǎo ma?", opts:["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans:1 },
-    { q:"我很好。wǒ hěn hǎo", opts:["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans:0 },
-    { q:"爸爸在家。bàba zài jiā", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans:0 },
-    { q:"我有一个哥哥。wǒ yǒu yī gè gēge", opts:["ฉันมีพี่ชายคนหนึ่ง","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0 },
-    { q:"我喜欢学习。wǒ xǐhuan xuéxí", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0 },
-    { q:"谢谢你。xièxie nǐ", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1 }
+  YCT1_listen: [
+    {q:"他是老师。tā shì lǎoshī.", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0},
+    {q:"谢谢！xièxie!", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1},
+    {q:"再见！zàijiàn!", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0},
+    {q:"妈妈 māma", opts:["พ่อ","แม่","พี่สาว"], ans:1},
+    {q:"我爱你 wǒ ài nǐ", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0},
+    {q:"他是谁？tā shì shuí?", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1},
+    {q:"我喜欢苹果。wǒ xǐhuan píngguǒ", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0},
+    {q:"谢谢老师。xièxie lǎoshī", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0},
+    {q:"我叫明明。wǒ jiào míngmíng", opts:["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans:0},
+    {q:"你好吗？nǐ hǎo ma?", opts:["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans:1},
+    {q:"我很好。wǒ hěn hǎo", opts:["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans:0},
+    {q:"爸爸在家。bàba zài jiā", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans:0},
+    {q:"我有一个哥哥。wǒ yǒu yī gè gēge", opts:["ฉันมีพี่ชายคนหนึ่ง","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0},
+    {q:"我喜欢学习。wǒ xǐhuan xuéxí", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0},
+    {q:"谢谢你。xièxie nǐ", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1},
+    // เพิ่มให้ครบ 20 สำหรับฟัง (ถ้าจำนวนไม่พอก ให้ทำซ้ำหรือเพิ่ม)
+    {q:"今天天气很好。jīntiān tiānqì hěn hǎo", opts:["วันนี้อากาศดี","วันนี้อากาศร้อน","วันนี้มีฝน"], ans:0},
+    {q:"我在学校。wǒ zài xuéxiào。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉัน去ตลาด"], ans:0},
+    {q:"你会游泳吗？nǐ huì yóuyǒng ma?", opts:["คุณว่ายน้ำได้ไหม","คุณเต้นได้ไหม","คุณวิ่งได้ไหม"], ans:0},
+    {q:"请坐。qǐng zuò。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0},
+    {q:"不要说话。bùyào shuōhuà。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0}
   ],
-  YCT2: [
-    { q:"你叫什么名字？nǐ jiào shénme míngzì?", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0 },
-    { q:"我喜欢苹果。wǒ xǐhuān píngguǒ。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1 },
-    { q:"他几岁？tā jǐ suì?", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0 },
-    { q:"今天星期几？jīntiān xīngqī jǐ?", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0 },
-    { q:"我在学校。wǒ zài xuéxiào。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0 },
-    { q:"现在几点？xiànzài jǐ diǎn?", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0 },
-    { q:"我有两个姐姐。wǒ yǒu liǎng gè jiějie。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0 },
-    { q:"你会游泳吗？nǐ huì yóuyǒng ma?", opts:["คุณว่ายน้ำได้ไหม","คุณเต้นได้ไหม","คุณวิ่งได้ไหม"], ans:0 },
-    { q:"他在做什么？tā zài zuò shénme?", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0 },
-    { q:"明天见。míngtiān jiàn。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0 },
-    { q:"她很漂亮。tā hěn piàoliang。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0 },
-    { q:"你喜欢什么颜色？nǐ xǐhuān shénme yánsè?", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0 },
-    { q:"他在吃饭。tā zài chīfàn。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0 },
-    { q:"你在哪儿？nǐ zài nǎr?", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0 },
-    { q:"我有一只狗。wǒ yǒu yì zhī gǒu。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0 },
-    { q:"你家有几口人？nǐ jiā yǒu jǐ kǒu rén?", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0 },
-    { q:"他是我的朋友。tā shì wǒ de péngyou。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0 },
-    { q:"请坐。qǐng zuò。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0 },
-    { q:"不要说话。bùyào shuōhuà。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0 },
-    { q:"谢谢老师。xièxiè lǎoshī。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0 }
+  YCT1_read: [
+    // 15 ข้ออ่าน (ใช้บางส่วนข้างบนหรือเขียนใหม่)
+    {q:"我爱你 wǒ ài nǐ", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0},
+    {q:"妈妈 māma", opts:["พ่อ","แม่","พี่สาว"], ans:1},
+    {q:"我喜欢学习。wǒ xǐhuan xuéxí", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0},
+    {q:"我有一个哥哥。wǒ yǒu yī gè gēge", opts:["ฉันมีพี่ชายคนหนึ่ง","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0},
+    {q:"谢谢你。xièxie nǐ", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1},
+    {q:"他是老师。tā shì lǎoshī.", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0},
+    {q:"你好吗？nǐ hǎo ma?", opts:["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans:1},
+    {q:"我很好。wǒ hěn hǎo", opts:["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans:0},
+    {q:"谢谢老师。xièxie lǎoshī", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0},
+    {q:"我叫明明。wǒ jiào míngmíng", opts:["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans:0},
+    {q:"爸爸在家。bàba zài jiā", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans:0},
+    {q:"再见！zàijiàn!", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0},
+    {q:"谢谢！xièxie!", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1},
+    {q:"他是谁？tā shì shuí?", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1},
+    {q:"我喜欢苹果。wǒ xǐhuan píngguǒ", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0}
+  ],
+
+  // YCT2
+  YCT2_listen: [
+    {q:"你叫什么名字？nǐ jiào shénme míngzì?", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0},
+    {q:"我喜欢苹果。wǒ xǐhuān píngguǒ。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1},
+    {q:"他几岁？tā jǐ suì?", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0},
+    {q:"今天星期几？jīntiān xīngqī jǐ?", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0},
+    {q:"我在学校。wǒ zài xuéxiào。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0},
+    {q:"现在几点？xiànzài jǐ diǎn?", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0},
+    {q:"我有两个姐姐。wǒ yǒu liǎng gè jiějie。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0},
+    {q:"你会游泳吗？nǐ huì yóuyǒng ma?", opts:["คุณว่ายน้ำได้ไหม","คุณเต้นได้ไหม","คุณวิ่งได้ไหม"], ans:0},
+    {q:"他在做什么？tā zài zuò shénme?", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0},
+    {q:"明天见。míngtiān jiàn。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0},
+    {q:"她很漂亮。tā hěn piàoliang。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0},
+    {q:"你喜欢什么颜色？nǐ xǐhuān shénme yánsè?", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0},
+    {q:"他在吃饭。tā zài chīfàn。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0},
+    {q:"你在哪儿？nǐ zài nǎr?", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0},
+    {q:"我有一只狗。wǒ yǒu yì zhī gǒu。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0},
+    {q:"你家有几口人？nǐ jiā yǒu jǐ kǒu rén?", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0},
+    {q:"他是我的朋友。tā shì wǒ de péngyou。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0},
+    {q:"请坐。qǐng zuò。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0},
+    {q:"不要说话。bùyào shuōhuà。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0},
+    {q:"谢谢老师。xièxiè lǎoshī。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0}
+  ],
+  YCT2_read: [
+    // 20 ข้ออ่าน (ใช้ชุดตัวอย่างด้านบน ซ้ำได้หรือเพิ่ม)
+    {q:"你叫什么名字？nǐ jiào shénme míngzì?", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0},
+    {q:"我喜欢苹果。wǒ xǐhuān píngguǒ。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1},
+    {q:"他几岁？tā jǐ suì?", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0},
+    {q:"今天星期几？jīntiān xīngqī jǐ?", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0},
+    {q:"我在学校。wǒ zài xuéxiào。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0},
+    {q:"现在几点？xiànzài jǐ diǎn?", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0},
+    {q:"我有两个姐姐。wǒ yǒu liǎng gè jiějie。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0},
+    {q:"你会游泳吗？nǐ huì yóuyǒng ma?", opts:["คุณว่ายน้ำได้ไหม","คุณเต้นได้ไหม","คุณวิ่งได้ไหม"], ans:0},
+    {q:"他在做什么？tā zài zuò shénme?", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0},
+    {q:"明天见。míngtiān jiàn。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0},
+    {q:"她很漂亮。tā hěn piàoliang。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0},
+    {q:"你喜欢什么颜色？nǐ xǐhuān shénme yánsè?", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0},
+    {q:"他在吃饭。tā zài chīfàn。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0},
+    {q:"你在哪儿？nǐ zài nǎr?", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0},
+    {q:"我有一只狗。wǒ yǒu yì zhī gǒu。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0},
+    {q:"你家有几口人？nǐ jiā yǒu jǐ kǒu rén?", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0},
+    {q:"他是我的朋友。tā shì wǒ de péngyou。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0},
+    {q:"请坐。qǐng zuò。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0},
+    {q:"不要说话。bùyào shuōhuà。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0},
+    {q:"谢谢老师。xièxiè lǎoshī。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0}
   ]
 };
 
-// ==== ระบบทำข้อสอบ ====
-let currentSet="", currentQ=0, score=0, answers=[], timer, timeLeft=60;
+/* ====== ตัวแปรระบบ ====== */
+let setName = "";          // "YCT1" or "YCT2"
+let modePhase = "";        // "listen" or "read"
+let orderList = [];        // คิวของ object ของข้อที่จะทำ (รวมทั้งฟังและอ่าน แต่ดำเนินทีละ phase)
+let currentIndex = 0;      // index ใน orderList
+let timerId = null;
+let timeLeft = 60;
+let totalQuestions = 0;
+let rawCorrect = 0;
+let answersRecord = [];    // {q, correct, chosen, phase, idx}
 
-function startQuiz(set){
-  currentSet=set; currentQ=0; score=0; answers=[];
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("quizScreen").classList.remove("hidden");
+/* TTS configuration: ผู้ใช้เลือกเสียงผู้หญิง (ตอบ B) */
+let selectedGender = "female";
+
+/* ====== Flow control ====== */
+function beginSet(which){
+  setName = which;
+  // สร้างลิสต์แบบ: ฟังทั้งหมดก่อน แล้วอ่าน
+  if(which === "YCT1"){
+    orderList = [
+      ...questions.YCT1_listen.map((x,i)=>({...x, phase:'listen', idx:i})),
+      ...questions.YCT1_read.map((x,i)=>({...x, phase:'read', idx:i}))
+    ];
+  } else {
+    orderList = [
+      ...questions.YCT2_listen.map((x,i)=>({...x, phase:'listen', idx:i})),
+      ...questions.YCT2_read.map((x,i)=>({...x, phase:'read', idx:i}))
+    ];
+  }
+  totalQuestions = orderList.length;
+  currentIndex = 0;
+  rawCorrect = 0;
+  answersRecord = [];
+  showQuizScreen();
   showQuestion();
 }
 
-function showQuestion(){
-  const q = questions[currentSet][currentQ];
-  if(!q) return finishQuiz();
-  document.getElementById("questionBox").innerHTML = `
-    <div class="question"><b>ข้อ ${currentQ+1}:</b> ${q.q}</div>
-    <div class="options">
-      ${q.opts.map((opt,i)=>`<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
-    </div>`;
-  resetTimer();
+/* แสดงหน้าทำข้อสอบ */
+function showQuizScreen(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
 }
 
-function resetTimer(){
-  clearInterval(timer);
+/* แสดงคำถามปัจจุบัน */
+function showQuestion(){
+  clearInterval(timerId);
   timeLeft = 60;
-  document.getElementById("timer").innerText = "เวลา: 60";
-  timer = setInterval(()=>{
+  updateTimerUI();
+
+  // แสดง part label (ฟังหรืออ่าน)
+  const current = orderList[currentIndex];
+  const partLabel = document.getElementById('partLabel');
+  partLabel.innerText = `${setName} — ${current.phase === 'listen' ? '听力 (ฟัง)' : '阅读 (อ่าน)'} ข้อ ${currentIndex+1}/${totalQuestions}`;
+
+  // แสดงคำถาม (สำหรับฟัง เราจะเล่น TTS อัตโนมัติ แต่ยังโชว์ข้อความได้)
+  const qb = document.getElementById('questionBox');
+  qb.innerHTML = `
+    <div class="question"><b>ข้อ ${currentIndex+1}:</b> ${ current.phase === 'listen' ? '(ฟังประโยคด้านล่าง)' : current.q }</div>
+    <div style="margin-bottom:8px;">
+      <button class="play-btn" onclick="playCurrentTTS()">🔊 เล่นเสียง</button>
+      <span class="small" style="margin-left:8px;">(กดเล่นได้ถ้าต้องการฟังซ้ำ)</span>
+    </div>
+    <div class="options">${ current.opts.map((o, idx) => `<button onclick="choose(${idx})">${o}</button>`).join('') }</div>
+  `;
+
+  // ถ้าเป็น listening ให้เล่น TTS อัตโนมัติ
+  if(current.phase === 'listen'){
+    // ให้เวลาเล็กน้อยแล้วเล่น
+    setTimeout(()=>playCurrentTTS(), 250);
+  }
+
+  // start timer
+  timerId = setInterval(()=>{
     timeLeft--;
-    document.getElementById("timer").innerText = "เวลา: " + timeLeft;
-    if(timeLeft <= 0){clearInterval(timer); nextQuestion();}
+    updateTimerUI();
+    if(timeLeft <= 0){
+      clearInterval(timerId);
+      recordNoAnswerAndNext();
+    }
   },1000);
 }
 
-function checkAnswer(i){
-  clearInterval(timer);
-  const q = questions[currentSet][currentQ];
-  const btns = document.querySelectorAll(".options button");
-  btns.forEach((b,idx)=>{
-    if(idx===q.ans) b.classList.add("correct");
-    else if(idx===i) b.classList.add("wrong");
-    b.disabled=true;
+/* อัพเดต UI timer */
+function updateTimerUI(){
+  document.getElementById('timer').innerText = 'เวลา: ' + timeLeft;
+}
+
+/* เล่น TTS ปัจจุบัน (ภาษา: จีน) */
+function playCurrentTTS(){
+  if(!window.speechSynthesis) return alert('เบราเซอร์นี้ไม่รองรับ SpeechSynthesis (TTS)');
+  const current = orderList[currentIndex];
+  const text = current.q; // ประโยคจีน + pinyin ใน q string
+  const utter = new SpeechSynthesisUtterance(text);
+  // เลือกเสียงจีนที่เป็นผู้หญิง ถ้าไม่มีจะเลือกเสียงภาษา zh หรือ default
+  const voices = speechSynthesis.getVoices();
+  // พยายามเลือก voice ที่เป็นภาษาจีนและดูว่าเป็น female จากชื่อ
+  let chosen = voices.find(v => v.lang.startsWith('zh') && /female|Female|女|Google.*China|Mei|Yun/.test(v.name));
+  if(!chosen) chosen = voices.find(v => v.lang.startsWith('zh'));
+  if(!chosen) chosen = voices.find(v => v.lang.startsWith('zh-CN') || v.lang.startsWith('zh-TW'));
+  if(chosen) utter.voice = chosen;
+  // ค่าความเร็ว/น้ำหนัก (ปรับให้ฟังชัด)
+  utter.rate = 0.95;
+  utter.pitch = 1.0;
+  speechSynthesis.cancel(); // หยุดเสียงเดิมก่อน
+  speechSynthesis.speak(utter);
+}
+
+/* เลือกคำตอบ */
+function choose(choiceIdx){
+  clearInterval(timerId);
+  const current = orderList[currentIndex];
+  const btns = document.querySelectorAll('.options button');
+  // แสดงสี (ถูก/ผิด/คำตอบจริง)
+  btns.forEach((b, i)=>{
+    b.disabled = true;
+    if(i === current.ans) { b.classList.add('correct'); }
+    if(i === choiceIdx && i !== current.ans) { b.classList.add('wrong'); }
+    // ถ user ตอบถูก (i === current.ans && choiceIdx === i)
   });
-  if(i===q.ans) score++;
-  answers.push({q:q.q, correct:q.opts[q.ans], chosen:q.opts[i] || "ไม่ตอบ"});
-  setTimeout(nextQuestion,1000);
+  // บันทึกผล
+  const chosenText = current.opts[choiceIdx] ?? "ไม่ตอบ";
+  answersRecord.push({
+    q: current.q,
+    correct: current.opts[current.ans],
+    chosen: chosenText,
+    phase: current.phase
+  });
+  if(choiceIdx === current.ans) rawCorrect++;
+
+  // รอ 800ms แล้วไปข้อถัดไป
+  setTimeout(()=>{ currentIndex++; if(currentIndex < totalQuestions) showQuestion(); else finishAll(); }, 800);
 }
 
-function nextQuestion(){
-  currentQ++;
-  if(currentQ < questions[currentSet].length) showQuestion();
-  else finishQuiz();
+/* หมดเวลา (ไม่ได้ตอบ) */
+function recordNoAnswerAndNext(){
+  const current = orderList[currentIndex];
+  const btns = document.querySelectorAll('.options button');
+  btns.forEach((b,i)=>{ b.disabled=true; if(i===current.ans) b.classList.add('correct'); });
+  answersRecord.push({
+    q: current.q,
+    correct: current.opts[current.ans],
+    chosen: "ไม่ตอบ",
+    phase: current.phase
+  });
+  // ถัดไป
+  setTimeout(()=>{ currentIndex++; if(currentIndex < totalQuestions) showQuestion(); else finishAll(); }, 800);
 }
 
-function finishQuiz(){
-  document.getElementById("quizScreen").classList.add("hidden");
-  document.getElementById("resultScreen").classList.remove("hidden");
-  document.getElementById("scoreDisplay").innerText = `คุณได้ ${score}/${questions[currentSet].length} คะแนน`;
-  document.getElementById("answerList").innerHTML = answers.map(a=>
-    `<p>${a.q}<br>✅ ถูก: <b>${a.correct}</b><br>📝 คุณตอบ: ${a.chosen}</p>`).join("<hr>");
+/* จบทั้งสองพาร์ท */
+function finishAll(){
+  clearInterval(timerId);
+  document.getElementById('quizScreen').classList.add('hidden');
+  // คำนวณคะแนน
+  const raw = rawCorrect; // เช่น 23
+  const total = totalQuestions; // 35 หรือ 40
+  // แปลงเป็นคะแนนจริงเต็ม 200 (ปัดเป็นจำนวนเต็ม)
+  const real = Math.round((raw / total) * 200);
+  const pass = real >= 120;
+  // แสดง UI
+  document.getElementById('resultScreen').classList.remove('hidden');
+  document.getElementById('scoreSummary').innerHTML = `<b>คะแนนดิบ:</b> ${raw}/${total} &nbsp;&nbsp; <b>คะแนนจริง:</b> ${real}/200`;
+  document.getElementById('passFail').innerHTML = pass ? `<span class="result-good">ผ่าน ✅</span>` : `<span class="result-bad">ไม่ผ่าน ❌</span>`;
+
+  // สร้างตารางเฉลย
+  const answerDiv = document.getElementById('answerList');
+  answerDiv.innerHTML = answersRecord.map((a,i)=>`
+    <div style="padding:8px;border-radius:8px;margin-bottom:6px;background:#fbfeff;border:1px solid #eaf6ff;">
+      <div><b>ข้อ ${i+1} (${a.phase})</b></div>
+      <div class="small">${a.q}</div>
+      <div style="margin-top:6px;">✅ ถูก: <b style="color:${'#1976D2'}">${a.correct}</b> &nbsp;&nbsp; 📝 คุณตอบ: <b>${a.chosen}</b></div>
+    </div>
+  `).join('');
+  // เก็บคะแนนไว้ชั่วคราวใน DOM (เพื่อใช้บันทึก)
+  document.getElementById('resultScreen').dataset.raw = raw;
+  document.getElementById('resultScreen').dataset.real = real;
+  document.getElementById('resultScreen').dataset.total = total;
 }
 
-function saveScore(){
-  const name = document.getElementById("studentName").value.trim();
-  if(!name) return alert("กรุณากรอกชื่อ");
-  const timeNow = new Date();
-  const tStr = timeNow.toLocaleTimeString('th-TH') + " " + timeNow.toLocaleDateString('th-TH');
-  const record = {name, set: currentSet, score, time: tStr};
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  data.push(record);
-  localStorage.setItem("yctScores", JSON.stringify(data));
-  alert("บันทึกสำเร็จ!");
-  backHome();
+/* บันทึกผลเข้าสู่ localStorage */
+function saveResult(){
+  const name = document.getElementById('studentName').value.trim();
+  if(!name) return alert('กรุณากรอกชื่อก่อนบันทึก');
+  const raw = parseInt(document.getElementById('resultScreen').dataset.raw,10) || 0;
+  const real = parseInt(document.getElementById('resultScreen').dataset.real,10) || 0;
+  const total = parseInt(document.getElementById('resultScreen').dataset.total,10) || 0;
+  const now = new Date();
+  const timeStr = now.toLocaleString('th-TH');
+  const rec = { name, set: setName, raw:`${raw}/${total}`, real:`${real}/200`, score: real, time: timeStr };
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  arr.push(rec);
+  // sort by score desc
+  arr.sort((a,b)=> (b.score||0) - (a.score||0));
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  alert('บันทึกคะแนนเรียบร้อย!');
+  backToHome();
 }
 
-function backHome(){
-  document.getElementById("startScreen").classList.remove("hidden");
-  document.getElementById("quizScreen").classList.add("hidden");
-  document.getElementById("resultScreen").classList.add("hidden");
-  document.getElementById("leaderboardScreen").classList.add("hidden");
-  document.getElementById("teacherScreen").classList.add("hidden");
-}
-
+/* แสดง Leaderboard */
 function showLeaderboard(){
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("leaderboardScreen").classList.remove("hidden");
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const tbody = document.querySelector("#leaderboardTable tbody");
-  tbody.innerHTML = data.map(r=>`<tr><td>${r.name}</td><td>${r.set}</td><td>${r.score}</td><td>${r.time}</td></tr>`).join("");
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.remove('hidden');
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  const tbody = document.querySelector('#leaderboardTable tbody');
+  if(arr.length === 0){ tbody.innerHTML = '<tr><td colspan="5">ยังไม่มีคะแนน</td></tr>'; return; }
+  tbody.innerHTML = arr.map((r,i)=>`<tr>
+    <td>${escapeHtml(r.name)}</td>
+    <td>${r.raw}</td>
+    <td>${r.real}</td>
+    <td>${r.time}</td>
+    <td><button onclick="deleteScore(${i})" class="ghost">ลบ</button></td>
+  </tr>`).join('');
 }
 
-// ==== โหมดครู ====
+/* ลบรายการจาก leaderboard */
+function deleteScore(i){
+  if(!confirm('ต้องการลบเรคคอร์ดนี้หรือไม่?')) return;
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  arr.splice(i,1);
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  showLeaderboard();
+}
+
+/* เคลียร์ทั้งหมด (leaderboard) */
+function clearLocalScores(){
+  if(!confirm('ลบคะแนนทั้งหมดจาก localStorage?')) return;
+  localStorage.removeItem('yctScores');
+  showLeaderboard();
+}
+
+/* โหมดครู (รหัส 2222) */
 function enterTeacherMode(){
-  const pw = prompt("กรอกรหัสผ่านครู:");
-  if(pw!=="2222") return alert("รหัสไม่ถูกต้อง");
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("teacherScreen").classList.remove("hidden");
+  const pw = prompt('กรอกรหัสผ่านครู:');
+  if(pw !== '2222') return alert('รหัสไม่ถูกต้อง');
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.remove('hidden');
   renderTeacherTable();
 }
 
 function renderTeacherTable(){
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const tbody = document.querySelector("#teacherTable tbody");
-  tbody.innerHTML = data.map((r,i)=>
-    `<tr>
-      <td contenteditable onblur="updateRecord(${i},'name',this.innerText)">${r.name}</td>
-      <td contenteditable onblur="updateRecord(${i},'set',this.innerText)">${r.set}</td>
-      <td contenteditable onblur="updateRecord(${i},'score',this.innerText)">${r.score}</td>
-      <td contenteditable onblur="updateRecord(${i},'time',this.innerText)">${r.time}</td>
-      <td><button onclick="deleteRecord(${i})">ลบ</button></td>
-    </tr>`
-  ).join("");
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  const tbody = document.querySelector('#teacherTable tbody');
+  if(arr.length === 0){ tbody.innerHTML = '<tr><td colspan="5">ยังไม่มีเรคคอร์ด</td></tr>'; return; }
+  tbody.innerHTML = arr.map((r,i)=>`<tr>
+    <td contenteditable onblur="updateTeacher(${i},'name',this.innerText)">${escapeHtml(r.name)}</td>
+    <td contenteditable onblur="updateTeacher(${i},'raw',this.innerText)">${r.raw}</td>
+    <td contenteditable onblur="updateTeacher(${i},'real',this.innerText)">${r.real}</td>
+    <td contenteditable onblur="updateTeacher(${i},'time',this.innerText)">${r.time}</td>
+    <td>
+      <button onclick="teacherDelete(${i})" class="ghost">ลบ</button>
+    </td>
+  </tr>`).join('');
 }
 
-function updateRecord(i,field,value){
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  data[i][field] = value;
-  localStorage.setItem("yctScores", JSON.stringify(data));
-}
-
-function deleteRecord(i){
-  if(!confirm("ลบข้อมูลนี้?")) return;
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  data.splice(i,1);
-  localStorage.setItem("yctScores", JSON.stringify(data));
-  renderTeacherTable();
-}
-
-function addRecord(){
-  const data = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  const timeNow = new Date();
-  const tStr = timeNow.toLocaleTimeString('th-TH') + " " + timeNow.toLocaleDateString('th-TH');
-  data.push({name:"ใหม่", set:"YCT1", score:0, time:tStr});
-  localStorage.setItem("yctScores", JSON.stringify(data));
-  renderTeacherTable();
-}
-
-function clearAll(){
-  if(confirm("ต้องการลบข้อมูลทั้งหมดหรือไม่?")){
-    localStorage.removeItem("yctScores");
-    renderTeacherTable();
+function updateTeacher(i, field, val){
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  if(!arr[i]) return;
+  // ถ้าผู้ใช้แก้ real ให้ลองอัพเดต score numeric
+  arr[i][field] = val;
+  if(field === 'real'){
+    // real รูปแบบ "123/200" -> score: 123
+    const m = String(val).match(/(\d+)/);
+    arr[i].score = m ? parseInt(m[1],10) : (arr[i].score||0);
   }
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  renderTeacherTable();
 }
+function teacherDelete(i){
+  if(!confirm('ลบเรคคอร์ดนี้?')) return;
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  arr.splice(i,1);
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  renderTeacherTable();
+}
+function addRecord(){
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  const now = new Date();
+  arr.push({ name: 'ใหม่', raw: '0/0', real: '0/200', score: 0, time: now.toLocaleString('th-TH')});
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  renderTeacherTable();
+}
+
+/* กลับหน้าหลัก */
+function backToHome(){
+  // reset speech cancel
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+}
+
+/* Utility */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* หากโหลดหน้าแล้วมี voices ยังไม่พร้อม ให้โหลดซ้ำเมื่อ voiceschanged */
+if(window.speechSynthesis){
+  speechSynthesis.onvoiceschanged = () => { /* ready */ };
+}
+
+/* ป้องกันการปิดหน้าโดยไม่ได้ตั้งใจ (ไม่จำเป็น แต่ถ้าต้องการให้เปิด) */
+// window.onbeforeunload = function() { return "ถ้าคุณออก คะแนนจะไม่ถูกบันทึก"; };
 </script>
 </body>
 </html>
