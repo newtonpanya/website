@@ -3,306 +3,523 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>YCT Online Quiz</title>
+<title>🧧 YCT Online Quiz (Listening + Reading)</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
-
 <style>
+  :root{
+    --bg:#E8F5FF; --card:#ffffff; --accent:#0288D1; --accent-2:#03A9F4;
+    --good:#4CAF50; --bad:#E53935; --muted:#666;
+  }
+  *{box-sizing:border-box}
   body{
-    font-family:'Noto Sans SC',sans-serif;
-    background:#E8F5FF;
-    padding:20px;
-    margin:0;
+    font-family: "Noto Sans SC", "Arial", sans-serif;
+    background:linear-gradient(180deg,#f4fbff 0%,var(--bg) 100%);
+    margin:0; padding:20px; min-height:100vh;
+    color:#013e5a;
   }
-  .screen{display:none;}
-  .active{display:block;}
-  .card{
-    background:white;
-    padding:20px;
-    border-radius:12px;
-    max-width:700px;
-    margin:auto;
-    box-shadow:0 2px 8px #0003;
+  .container{ max-width:980px; margin:0 auto; background:var(--card); padding:22px; border-radius:14px;
+    box-shadow:0 6px 22px rgba(3,64,120,0.06);
   }
-  button{
-    padding:10px 20px;
-    border-radius:8px;
-    border:none;
-    cursor:pointer;
-    background:#2196F3;
-    color:white;
-    font-size:18px;
-    margin:5px 0;
+  h1{ text-align:center; color:var(--accent); margin:0 0 12px 0; }
+  p.lead{ text-align:center; color:var(--muted); margin-top:6px; }
+  .flex{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:14px 0; }
+  button{ background:var(--accent-2); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer;
+    font-weight:600; box-shadow:0 4px 10px rgba(3,169,244,0.12);
   }
-  .choice{
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    margin-bottom:10px;
-    cursor:pointer;
-  }
-  .correct{background:#C8FACC;}
-  .wrong{background:#FFCCCC;}
-  table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:15px;
-  }
-  table,th,td{border:1px solid #999;}
-  th,td{
-    padding:8px;
-    text-align:center;
-    background:white;
-  }
+  button.ghost{ background:#fff; color:var(--accent-2); border:1px solid var(--accent-2); }
+  .hidden{ display:none !important; }
+  .card{ background:linear-gradient(180deg,#fff,#fbfeff); border-radius:12px; padding:14px; box-shadow:0 4px 14px rgba(2,136,209,0.04); }
+  .timer{ text-align:center; font-weight:700; color:var(--accent); font-size:1.05rem; margin-bottom:12px; }
+  .question{ font-size:1.15rem; padding:10px 12px; border-radius:10px; background:rgba(2,136,209,0.05); margin-bottom:10px; }
+  .options button{ display:block; width:100%; margin:8px 0; padding:10px; border-radius:8px; text-align:left; background:#fff; border:1px solid #e6f4ff; color:#013e5a; }
+  .options button.correct{ background:var(--good); color:#fff; border-color:transparent; }
+  .options button.wrong{ background:var(--bad); color:#fff; border-color:transparent; }
+  .meta{ display:flex; gap:10px; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+  .small{ font-size:0.9rem; color:var(--muted); }
+  .center{ text-align:center; }
+  img.qimg{ width:100%; max-height:280px; object-fit:contain; border-radius:8px; margin-bottom:10px; background:#f8feff; border:1px solid #eaf6ff; }
+  .controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  footer{ margin-top:14px; text-align:center; color:var(--muted); font-size:0.9rem; }
+  @media (min-width:700px){ .options button{ width:49%; display:inline-block; } }
+  .badge{ padding:6px 8px; border-radius:8px; background:#fff; border:1px solid #e6f4ff; color:var(--accent); font-weight:600; }
+  table{ width:100%; border-collapse:collapse; margin-top:12px; }
+  th,td{ padding:8px; border:1px solid #e9f4ff; text-align:center; }
+  th{ background:linear-gradient(90deg,var(--accent-2),var(--accent)); color:#fff; }
 </style>
 </head>
 <body>
+<div class="container">
+  <h1>🧧 YCT Online Quiz</h1>
+  <p class="lead small">เลือกชุด — ระบบเล่นพาร์ท ฟัง(听力) ก่อน แล้วต่อด้วย อ่าน(阅读). ข้อละ 60 วินาที</p>
 
-<!-- ------------------ หน้าหลัก ------------------ -->
-<div id="startScreen" class="screen active">
-  <div class="card">
-    <h1>🧧 YCT Online Quiz</h1>
-    <button onclick="startQuiz()">เริ่มทำข้อสอบ</button>
-    <button onclick="openLeaderboard()">ตารางอันดับ</button>
-    <button onclick="openTeacher()">โหมดครู</button>
+  <!-- Start -->
+  <div id="startScreen" class="card">
+    <div class="flex">
+      <button onclick="beginSet('YCT1')">เริ่ม YCT1 (听力20 + 阅读15)</button>
+      <button onclick="beginSet('YCT2')">เริ่ม YCT2 (听力20 + 阅读20)</button>
+      <button class="ghost" onclick="showLeaderboard()">🏆 Leaderboard</button>
+      <button class="ghost" onclick="showTeacherLogin()">👩‍🏫 โหมดครู</button>
+    </div>
+    <div class="flex center">
+      <div class="badge">เวลา / ข้อ = 60 วินาที</div>
+      <div class="badge">ผ่าน ≥ 120 / 200</div>
+      <div class="badge">ข้อมูลเก็บใน LocalStorage</div>
+    </div>
   </div>
-</div>
 
-<!-- ------------------ ทำข้อสอบ ------------------ -->
-<div id="quizScreen" class="screen">
-  <div class="card">
-    <h2 id="qTitle"></h2>
-    <p id="qText"></p>
-    <div id="choiceBox"></div>
-    <p>⏳ <span id="timer"></span></p>
-    <button onclick="nextQuestion()">ถัดไป</button>
-  </div>
-</div>
+  <!-- Quiz -->
+  <div id="quizScreen" class="card hidden">
+    <div class="meta">
+      <div class="timer" id="timer">เวลา: 60</div>
+      <div>
+        <button class="play-btn" onclick="playCurrentAudio()">🔊 เล่นเสียง</button>
+        <span id="partLabel" class="small" style="margin-left:10px"></span>
+      </div>
+    </div>
 
-<!-- ------------------ ผลลัพธ์ ------------------ -->
-<div id="resultScreen" class="screen">
-  <div class="card">
-    <h2>ผลการทำข้อสอบ</h2>
-    <p id="scoreText"></p>
-    <div id="answerReview"></div>
-    <button onclick="saveScore()">บันทึกคะแนน</button>
-    <button onclick="backToHome()">กลับหน้าหลัก</button>
-  </div>
-</div>
+    <div id="questionBox"></div>
 
-<!-- ------------------ Leaderboard ------------------ -->
-<div id="leaderboardScreen" class="screen">
-  <div class="card">
-    <h2>🏆 ตารางอันดับ</h2>
-    <table id="boardTable"></table>
-    <button onclick="backToHome()">กลับหน้าหลัก</button>
+    <div class="controls">
+      <button class="ghost" id="nextBtn" onclick="nextQuestion()">ถัดไป ▶</button>
+    </div>
   </div>
-</div>
 
-<!-- ------------------ Teacher Mode ------------------ -->
-<div id="teacherLogin" class="screen">
-  <div class="card">
-    <h2>โหมดครู</h2>
-    <input id="teacherCode" placeholder="กรอกรหัสครู 2222" />
-    <button onclick="checkTeacher()">เข้าสู่ระบบ</button>
-    <button onclick="backToHome()">กลับ</button>
-  </div>
-</div>
+  <!-- Result -->
+  <div id="resultScreen" class="card hidden">
+    <h2 class="center">ผลลัพธ์</h2>
+    <p id="scoreSummary" class="center"></p>
+    <div id="passFail" class="center small"></div>
 
-<div id="teacherScreen" class="screen">
-  <div class="card">
-    <h2>📚 คะแนนนักเรียน</h2>
-    <table id="teacherTable"></table>
-    <button onclick="logoutTeacher()">ออกจากระบบ</button>
-    <button onclick="backToHome()">กลับหน้าหลัก</button>
+    <h3>เฉลย</h3>
+    <div id="answerList" style="max-height:360px; overflow:auto"></div>
+
+    <label>กรอกชื่อก่อนบันทึก:</label>
+    <input id="studentName" type="text" placeholder="ชื่อของคุณ (จำเป็น)" style="padding:8px;border-radius:8px;border:1px solid #ddd;width:100%;margin-top:6px;"/>
+
+    <div class="flex" style="margin-top:10px;">
+      <button onclick="saveResult()">💾 บันทึก</button>
+      <button class="ghost" onclick="backToHome()">🏠 หน้าหลัก</button>
+      <button class="ghost" onclick="showLeaderboard()">🏆 Leaderboard</button>
+    </div>
   </div>
+
+  <!-- Leaderboard -->
+  <div id="leaderboardScreen" class="card hidden">
+    <h2 class="center">🏆 Leaderboard</h2>
+    <table id="leaderboardTable"><thead>
+      <tr><th>ชื่อ</th><th>ชุด</th><th>คะแนนดิบ</th><th>คะแนนจริง</th><th>เวลา</th><th>ลบ</th></tr>
+    </thead><tbody></tbody></table>
+
+    <div class="flex" style="margin-top:10px;">
+      <button class="ghost" onclick="clearLocalScores()">🧹 ล้างทั้งหมด</button>
+      <button class="ghost" onclick="backToHome()">🏠 กลับ</button>
+    </div>
+  </div>
+
+  <!-- Teacher Login -->
+  <div id="teacherLogin" class="card hidden">
+    <h3 class="center">👩‍🏫 เข้าสู่โหมดครู</h3>
+    <div style="text-align:center;margin-bottom:8px;"><input id="teacherPass" placeholder="ใส่รหัสครู" style="padding:8px;border-radius:8px;border:1px solid #ddd;" /></div>
+    <div class="flex" style="justify-content:center">
+      <button onclick="enterTeacherMode()">เข้าสู่ระบบ</button>
+      <button class="ghost" onclick="backToHome()">กลับ</button>
+    </div>
+  </div>
+
+  <!-- Teacher -->
+  <div id="teacherScreen" class="card hidden">
+    <h2 class="center">👩‍🏫 โหมดครู</h2>
+    <div class="small center">คุณอยู่ในโหมดครู — รหัสที่ใช้คือ <b>2222</b></div>
+    <table id="teacherTable"><thead>
+      <tr><th>ชื่อ</th><th>ชุด</th><th>คะแนนดิบ</th><th>คะแนนจริง</th><th>เวลา</th><th>ลบ</th></tr>
+    </thead><tbody></tbody></table>
+
+    <div class="flex" style="margin-top:10px;">
+      <button class="ghost" onclick="backToHome()">🏠 กลับ</button>
+    </div>
+  </div>
+
+  <footer>YCT Quiz — LocalStorage Version</footer>
 </div>
 
 <script>
-// ----------------------------- ตัวอย่างข้อสอบ -----------------------------
-const questions = [
-  {
-    q:"1. 你好吗？ หมายถึงข้อใด",
-    choices:["สบายดีไหม","คุณชื่ออะไร","ไปไหนมา"],
-    answer:0
-  },
-  {
-    q:"2. 图书馆คืออะไร",
-    choices:["ห้องสมุด","โรงอาหาร","โรงเรียน"],
-    answer:0
-  }
-];
+/* ========= ข้อมูลข้อสอบ (มี audio + image placeholders) =========
+   โครงสร้าง: for each set: listen-array, read-array
+   ทุกข้อมี: q (จีน), opts (ไทย), ans (index), audio (path or null), img (path or null)
+   ให้คุณแทนที่ไฟล์ audio/ และ img/ ด้วยไฟล์จริงของคุณ
+=================================================================*/
 
-// ----------------------------- ตัวแปรหลัก -----------------------------
-let index = 0;
-let score = 0;
-let userAns = [];
-let timer = 0;
-let timerId = null;
+const questions = {
+  YCT1_listen: [
+    {q:"他是老师。", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0, audio:"audio/yct1_listen_01.mp3", img:"img/yct1_listen_01.png"},
+    {q:"谢谢！", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1, audio:"audio/yct1_listen_02.mp3", img:"img/yct1_listen_02.png"},
+    {q:"再见！", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0, audio:"audio/yct1_listen_03.mp3", img:"img/yct1_listen_03.png"},
+    {q:"妈妈", opts:["พ่อ","แม่","พี่สาว"], ans:1, audio:"audio/yct1_listen_04.mp3", img:"img/yct1_listen_04.png"},
+    {q:"我爱你", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0, audio:"audio/yct1_listen_05.mp3", img:"img/yct1_listen_05.png"},
+    {q:"他是谁？", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1, audio:"audio/yct1_listen_06.mp3", img:"img/yct1_listen_06.png"},
+    {q:"我喜欢苹果。", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0, audio:"audio/yct1_listen_07.mp3", img:"img/yct1_listen_07.png"},
+    {q:"谢谢老师。", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0, audio:"audio/yct1_listen_08.mp3", img:"img/yct1_listen_08.png"},
+    {q:"我叫明明。", opts:["ฉันชื่อหมิงหมิง","ฉันชื่อหงหง","ฉันชื่ออาเต๋อ"], ans:0, audio:"audio/yct1_listen_09.mp3", img:"img/yct1_listen_09.png"},
+    {q:"你好吗？", opts:["เธออยู่ที่ไหน","สบายดีไหม","เธอทำอะไร"], ans:1, audio:"audio/yct1_listen_10.mp3", img:"img/yct1_listen_10.png"},
+    {q:"我很好。", opts:["ฉันดีมาก","ฉันเหนื่อย","ฉันเศร้า"], ans:0, audio:"audio/yct1_listen_11.mp3", img:"img/yct1_listen_11.png"},
+    {q:"爸爸在家。", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่โรงเรียน"], ans:0, audio:"audio/yct1_listen_12.mp3", img:"img/yct1_listen_12.png"},
+    {q:"我有一个哥哥。", opts:["ฉันมีพี่ชายหนึ่งคน","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0, audio:"audio/yct1_listen_13.mp3", img:"img/yct1_listen_13.png"},
+    {q:"我喜欢学习。", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0, audio:"audio/yct1_listen_14.mp3", img:"img/yct1_listen_14.png"},
+    {q:"谢谢你。", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1, audio:"audio/yct1_listen_15.mp3", img:"img/yct1_listen_15.png"},
+    {q:"今天天气很好。", opts:["วันนี้อากาศดี","วันนี้อากาศร้อน","วันนี้ฝนตก"], ans:0, audio:"audio/yct1_listen_16.mp3", img:"img/yct1_listen_16.png"},
+    {q:"我在学校。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0, audio:"audio/yct1_listen_17.mp3", img:"img/yct1_listen_17.png"},
+    {q:"你会游泳吗？", opts:["ว่ายน้ำได้ไหม","เต้นได้ไหม","วิ่งได้ไหม"], ans:0, audio:"audio/yct1_listen_18.mp3", img:"img/yct1_listen_18.png"},
+    {q:"请坐。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0, audio:"audio/yct1_listen_19.mp3", img:"img/yct1_listen_19.png"},
+    {q:"不要说话。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0, audio:"audio/yct1_listen_20.mp3", img:"img/yct1_listen_20.png"}
+  ],
+  YCT1_read: [
+    {q:"我爱你", opts:["ฉันรักเธอ","ฉันเกลียดเธอ","สวัสดี"], ans:0, audio:null, img:"img/yct1_read_01.png"},
+    {q:"妈妈", opts:["พ่อ","แม่","พี่สาว"], ans:1, audio:null, img:"img/yct1_read_02.png"},
+    {q:"我喜欢学习。", opts:["ฉันชอบเรียน","ฉันเกลียดเรียน","ฉันอยากนอน"], ans:0, audio:null, img:"img/yct1_read_03.png"},
+    {q:"我有一个哥哥。", opts:["ฉันมีพี่ชายหนึ่งคน","ฉันไม่มีพี่ชาย","ฉันมีน้องชาย"], ans:0, audio:null, img:"img/yct1_read_04.png"},
+    {q:"谢谢你。", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1, audio:null, img:"img/yct1_read_05.png"},
+    {q:"他是老师。", opts:["เขาเป็นครู","เขาเป็นนักเรียน","เขาเป็นหมอ"], ans:0, audio:null, img:"img/yct1_read_06.png"},
+    {q:"你好吗？", opts:["อยู่ไหน","สบายดีไหม","ทำอะไร"], ans:1, audio:null, img:"img/yct1_read_07.png"},
+    {q:"我很好。", opts:["ดีมาก","เหนื่อย","เศร้า"], ans:0, audio:null, img:"img/yct1_read_08.png"},
+    {q:"谢谢老师。", opts:["ขอบคุณครู","ลาก่อนครู","ครูอยู่ไหน"], ans:0, audio:null, img:"img/yct1_read_09.png"},
+    {q:"我叫明明。", opts:["ชื่อหมิงหมิง","ชื่อหงหง","ชื่ออาเต๋อ"], ans:0, audio:null, img:"img/yct1_read_10.png"},
+    {q:"爸爸在家。", opts:["พ่ออยู่บ้าน","แม่อยู่บ้าน","พ่ออยู่รร."], ans:0, audio:null, img:"img/yct1_read_11.png"},
+    {q:"再见！", opts:["ลาก่อน","สวัสดี","ขอบคุณ"], ans:0, audio:null, img:"img/yct1_read_12.png"},
+    {q:"谢谢！", opts:["สวัสดี","ขอบคุณ","ลาก่อน"], ans:1, audio:null, img:"img/yct1_read_13.png"},
+    {q:"他是谁？", opts:["เขาอยู่ไหน","เขาเป็นใคร","เขาทำอะไร"], ans:1, audio:null, img:"img/yct1_read_14.png"},
+    {q:"我喜欢苹果。", opts:["ฉันชอบแอปเปิ้ล","ฉันกินกล้วย","ฉันไม่ชอบส้ม"], ans:0, audio:null, img:"img/yct1_read_15.png"}
+  ],
+  /* YCT2 */
+  YCT2_listen: [
+    {q:"你叫什么名字？", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0, audio:"audio/yct2_listen_01.mp3", img:"img/yct2_listen_01.png"},
+    {q:"我喜欢苹果。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1, audio:"audio/yct2_listen_02.mp3", img:"img/yct2_listen_02.png"},
+    {q:"他几岁？", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0, audio:"audio/yct2_listen_03.mp3", img:"img/yct2_listen_03.png"},
+    {q:"今天星期几？", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0, audio:"audio/yct2_listen_04.mp3", img:"img/yct2_listen_04.png"},
+    {q:"我在学校。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0, audio:"audio/yct2_listen_05.mp3", img:"img/yct2_listen_05.png"},
+    {q:"现在几点？", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0, audio:"audio/yct2_listen_06.mp3", img:"img/yct2_listen_06.png"},
+    {q:"我有两个姐姐。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0, audio:"audio/yct2_listen_07.mp3", img:"img/yct2_listen_07.png"},
+    {q:"你会游泳吗？", opts:["ว่ายน้ำได้ไหม","เต้นได้ไหม","วิ่งได้ไหม"], ans:0, audio:"audio/yct2_listen_08.mp3", img:"img/yct2_listen_08.png"},
+    {q:"他在做什么？", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0, audio:"audio/yct2_listen_09.mp3", img:"img/yct2_listen_09.png"},
+    {q:"明天见。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0, audio:"audio/yct2_listen_10.mp3", img:"img/yct2_listen_10.png"},
+    {q:"她很漂亮。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0, audio:"audio/yct2_listen_11.mp3", img:"img/yct2_listen_11.png"},
+    {q:"你喜欢什么颜色？", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0, audio:"audio/yct2_listen_12.mp3", img:"img/yct2_listen_12.png"},
+    {q:"他在吃饭。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0, audio:"audio/yct2_listen_13.mp3", img:"img/yct2_listen_13.png"},
+    {q:"你在哪儿？", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0, audio:"audio/yct2_listen_14.mp3", img:"img/yct2_listen_14.png"},
+    {q:"我有一只狗。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0, audio:"audio/yct2_listen_15.mp3", img:"img/yct2_listen_15.png"},
+    {q:"你家有几口人？", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0, audio:"audio/yct2_listen_16.mp3", img:"img/yct2_listen_16.png"},
+    {q:"他是我的朋友。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0, audio:"audio/yct2_listen_17.mp3", img:"img/yct2_listen_17.png"},
+    {q:"请坐。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0, audio:"audio/yct2_listen_18.mp3", img:"img/yct2_listen_18.png"},
+    {q:"不要说话。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0, audio:"audio/yct2_listen_19.mp3", img:"img/yct2_listen_19.png"},
+    {q:"谢谢老师。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0, audio:"audio/yct2_listen_20.mp3", img:"img/yct2_listen_20.png"}
+  ],
+  YCT2_read: [
+    {q:"你叫什么名字？", opts:["คุณชื่ออะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0, audio:null, img:"img/yct2_read_01.png"},
+    {q:"我喜欢苹果。", opts:["ฉันไม่ชอบแอปเปิ้ล","ฉันชอบแอปเปิ้ล","ฉันกินแอปเปิ้ล"], ans:1, audio:null, img:"img/yct2_read_02.png"},
+    {q:"他几岁？", opts:["เขาอายุเท่าไร","เขาอยู่ไหน","เขาชื่ออะไร"], ans:0, audio:null, img:"img/yct2_read_03.png"},
+    {q:"今天星期几？", opts:["วันนี้วันอะไร","พรุ่งนี้วันอะไร","เมื่อวานวันอะไร"], ans:0, audio:null, img:"img/yct2_read_04.png"},
+    {q:"我在学校。", opts:["ฉันอยู่โรงเรียน","ฉันอยู่บ้าน","ฉันไปตลาด"], ans:0, audio:null, img:"img/yct2_read_05.png"},
+    {q:"现在几点？", opts:["ตอนนี้กี่โมง","วันนี้วันอะไร","พรุ่งนี้กี่โมง"], ans:0, audio:null, img:"img/yct2_read_06.png"},
+    {q:"我有两个姐姐。", opts:["ฉันมีพี่สาวสองคน","ฉันมีพี่ชายสองคน","ฉันไม่มีพี่"], ans:0, audio:null, img:"img/yct2_read_07.png"},
+    {q:"你会游泳吗？", opts:["ว่ายน้ำได้ไหม","เต้นได้ไหม","วิ่งได้ไหม"], ans:0, audio:null, img:"img/yct2_read_08.png"},
+    {q:"他在做什么？", opts:["เขากำลังทำอะไร","เขาอยู่ไหน","เขาเป็นใคร"], ans:0, audio:null, img:"img/yct2_read_09.png"},
+    {q:"明天见。", opts:["พบกันพรุ่งนี้","ลาก่อน","สวัสดีตอนเช้า"], ans:0, audio:null, img:"img/yct2_read_10.png"},
+    {q:"她很漂亮。", opts:["เธอสวยมาก","เธอสูงมาก","เธออ้วนมาก"], ans:0, audio:null, img:"img/yct2_read_11.png"},
+    {q:"你喜欢什么颜色？", opts:["คุณชอบสีอะไร","คุณอยู่ที่ไหน","คุณอายุเท่าไร"], ans:0, audio:null, img:"img/yct2_read_12.png"},
+    {q:"他在吃饭。", opts:["เขากำลังกินข้าว","เขากำลังนอน","เขากำลังวิ่ง"], ans:0, audio:null, img:"img/yct2_read_13.png"},
+    {q:"你在哪儿？", opts:["คุณอยู่ที่ไหน","คุณชื่ออะไร","คุณกำลังทำอะไร"], ans:0, audio:null, img:"img/yct2_read_14.png"},
+    {q:"我有一只狗。", opts:["ฉันมีสุนัขหนึ่งตัว","ฉันมีแมวหนึ่งตัว","ฉันไม่มีสัตว์"], ans:0, audio:null, img:"img/yct2_read_15.png"},
+    {q:"你家有几口人？", opts:["บ้านคุณมีกี่คน","บ้านคุณอยู่ที่ไหน","บ้านคุณใหญ่ไหม"], ans:0, audio:null, img:"img/yct2_read_16.png"},
+    {q:"他是我的朋友。", opts:["เขาเป็นเพื่อนของฉัน","เขาเป็นพี่ชายฉัน","เขาเป็นครูของฉัน"], ans:0, audio:null, img:"img/yct2_read_17.png"},
+    {q:"请坐。", opts:["เชิญนั่ง","เชิญกิน","เชิญเข้า"], ans:0, audio:null, img:"img/yct2_read_18.png"},
+    {q:"不要说话。", opts:["อย่าพูด","อย่ากิน","อย่าเดิน"], ans:0, audio:null, img:"img/yct2_read_19.png"},
+    {q:"谢谢老师。", opts:["ขอบคุณครู","ลาก่อนครู","สวัสดีครู"], ans:0, audio:null, img:"img/yct2_read_20.png"}
+  ]
+};
 
-// ----------------------------- เริ่มทำข้อสอบ -----------------------------
-function startQuiz(){
-  index = 0;
-  score = 0;
-  userAns = [];
-  showScreen("quizScreen");
-  loadQuestion();
-  startTimer(3 * questions.length * 60); 
-}
+/* ========== ตัวแปรระบบ ========== */
+let setName="", phase="", orderList=[], currentIndex=0, timerId=null, timeLeft=60;
+let totalQuestions=0, rawCorrect=0, answersRecord=[];
+let audioPlayer = new Audio();
 
-// ----------------------------- โหลดคำถาม -----------------------------
-function loadQuestion(){
-  const q = questions[index];
-  document.getElementById("qTitle").innerText = `ข้อที่ ${index+1} / ${questions.length}`;
-  document.getElementById("qText").innerText = q.q;
-
-  let html = "";
-  q.choices.forEach((c,i)=>{
-    html += `<div class="choice" onclick="selectAnswer(${i})">${c}</div>`;
-  });
-  document.getElementById("choiceBox").innerHTML = html;
-}
-
-// ----------------------------- เลือกคำตอบ -----------------------------
-function selectAnswer(i){
-  userAns[index] = i;
-  const items = document.querySelectorAll(".choice");
-  items.forEach(el=>el.style.background="white");
-  items[i].style.background="#D3E5FF";
-}
-
-// ----------------------------- ถัดไป -----------------------------
-function nextQuestion(){
-  if(userAns[index] == null){
-    alert("เลือกคำตอบก่อน!");
-    return;
-  }
-  index++;
-
-  if(index >= questions.length){
-    finishQuiz();
+/* ======= เริ่มชุดข้อสอบ ======= */
+function beginSet(which){
+  setName = which;
+  // build order: listen then read
+  if(which === 'YCT1'){
+    orderList = [
+      ...questions.YCT1_listen.map((x,i)=>({...x, phase:'listen', idx:i})),
+      ...questions.YCT1_read.map((x,i)=>({...x, phase:'read', idx:i}))
+    ];
   } else {
-    loadQuestion();
+    orderList = [
+      ...questions.YCT2_listen.map((x,i)=>({...x, phase:'listen', idx:i})),
+      ...questions.YCT2_read.map((x,i)=>({...x, phase:'read', idx:i}))
+    ];
   }
+  totalQuestions = orderList.length;
+  currentIndex = 0; rawCorrect = 0; answersRecord = [];
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('teacherLogin').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  showQuestion();
 }
 
-// ----------------------------- จับเวลา -----------------------------
-function startTimer(sec){
-  timer = sec;
-  updateTimer();
+/* ======= แสดงคำถามปัจจุบัน ======= */
+function showQuestion(){
+  clearInterval(timerId);
+  timeLeft = 60;
+  updateTimerUI();
+
+  const current = orderList[currentIndex];
+  document.getElementById('partLabel').innerText = `${setName} — ${current.phase === 'listen' ? '听力 (ฟัง)' : '阅读 (อ่าน)'} ข้อ ${currentIndex+1}/${totalQuestions}`;
+
+  const qb = document.getElementById('questionBox');
+  const imgHtml = current.img ? `<img class="qimg" src="${current.img}" alt="ภาพประกอบ">` : '';
+  const audioNote = current.audio ? '' : '<div class="small" style="margin-bottom:6px;color:var(--muted)">(ข้ออ่าน — ไม่มีไฟล์เสียง)</div>';
+
+  qb.innerHTML = `
+    <div class="question"><b>ข้อ ${currentIndex+1}:</b> ${ current.phase === 'listen' ? '(ฟังและเลือกคำตอบ)' : current.q }</div>
+    ${imgHtml}
+    ${audioNote}
+    <div style="margin-bottom:8px;">
+      <button class="play-btn" onclick="playCurrentAudio()">🔊 เล่นเสียง</button>
+      <span class="small" style="margin-left:8px;">(กดเล่นได้ถ้าต้องการฟังซ้ำ)</span>
+    </div>
+    <div class="options">${ current.opts.map((o, idx) => `<button onclick="choose(${idx})">${o}</button>`).join('') }</div>
+  `;
+
+  // auto-play listening audio shortly after render
+  if(current.phase === 'listen' && current.audio){
+    setTimeout(()=>playCurrentAudio(), 300);
+  }
+
   timerId = setInterval(()=>{
-    timer--;
-    updateTimer();
-    if(timer <= 0){
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 0){
       clearInterval(timerId);
-      finishQuiz();
+      recordNoAnswerAndNext();
     }
   },1000);
-}
-function updateTimer(){
-  const m = Math.floor(timer/60);
-  const s = timer%60;
-  document.getElementById("timer").innerText = `${m}:${s.toString().padStart(2,"0")}`;
+
+  // disable Next until answer is chosen or time up
+  document.getElementById('nextBtn').disabled = true;
 }
 
-// ----------------------------- จบข้อสอบ -----------------------------
-function finishQuiz(){
+/* ======= อัพเดต Timer UI ======= */
+function updateTimerUI(){
+  document.getElementById('timer').innerText = 'เวลา: ' + timeLeft + ' วินาที';
+}
+
+/* ======= เล่น audio ปัจจุบัน (ถ้ามี) ======= */
+function playCurrentAudio(){
+  const cur = orderList[currentIndex];
+  if(!cur || !cur.audio){ alert('ไม่มีไฟล์เสียงสำหรับข้อนี้'); return; }
+  // cancel previous
+  audioPlayer.pause();
+  audioPlayer.src = cur.audio;
+  audioPlayer.currentTime = 0;
+  audioPlayer.play().catch(e=>{ console.log('TTS/play error',e); alert('ไม่สามารถเล่นไฟล์เสียงได้ (ตรวจสอบ path หรือเบราเซอร์)'); });
+}
+
+/* ======= เลือกคำตอบ ======= */
+function choose(choiceIdx){
   clearInterval(timerId);
-  showScreen("resultScreen");
-
-  score = 0;
-  let review = "";
-
-  questions.forEach((q,i)=>{
-    const correct = q.answer;
-    const ua = userAns[i];
-
-    if(ua === correct) score++;
-
-    const color = ua===correct ? "correct" : "wrong";
-    review += `
-      <div class="${color}">
-        <p><b>ข้อ ${i+1}:</b> ${q.q}</p>
-        <p>ตอบของคุณ: ${q.choices[ua] || "ไม่ได้ตอบ"}</p>
-        <p>คำตอบที่ถูก: ${q.choices[correct]}</p>
-      </div><br>
-    `;
+  const current = orderList[currentIndex];
+  const btns = document.querySelectorAll('.options button');
+  btns.forEach((b, i)=>{
+    b.disabled = true;
+    if(i === current.ans) b.classList.add('correct');
+    if(i === choiceIdx && i !== current.ans) b.classList.add('wrong');
   });
 
-  document.getElementById("scoreText").innerHTML = `คะแนนของคุณ: <b>${score}/${questions.length}</b>`;
-  document.getElementById("answerReview").innerHTML = review;
-}
-
-// ----------------------------- บันทึกคะแนน -----------------------------
-function saveScore(){
-  const name = prompt("กรอกชื่อ: ");
-  if(!name) return;
-
-  const arr = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  arr.push({name,score,total:questions.length,date:new Date().toLocaleString()});
-  localStorage.setItem("yctScores",JSON.stringify(arr));
-  alert("บันทึกสำเร็จ!");
-}
-
-// ----------------------------- Leaderboard -----------------------------
-function openLeaderboard(){
-  showScreen("leaderboardScreen");
-  const arr = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  let html = "<tr><th>ชื่อ</th><th>คะแนน</th><th>วันที่</th></tr>";
-  arr.sort((a,b)=>b.score-a.score);
-  arr.forEach(r=>{
-    html += `<tr><td>${r.name}</td><td>${r.score}/${r.total}</td><td>${r.date}</td></tr>`;
+  answersRecord.push({
+    q: current.q,
+    phase: current.phase,
+    correct: current.opts[current.ans],
+    chosen: current.opts[choiceIdx],
+    audio: current.audio || null,
+    img: current.img || null
   });
-  document.getElementById("boardTable").innerHTML = html;
+  if(choiceIdx === current.ans) rawCorrect++;
+
+  // enable Next
+  document.getElementById('nextBtn').disabled = false;
 }
 
-// ----------------------------- Teacher Mode -----------------------------
-function openTeacher(){ showScreen("teacherLogin"); }
+/* ======= หมดเวลา หากไม่ได้ตอบ ======= */
+function recordNoAnswerAndNext(){
+  const current = orderList[currentIndex];
+  const btns = document.querySelectorAll('.options button');
+  btns.forEach((b,i)=>{ b.disabled=true; if(i===current.ans) b.classList.add('correct'); });
+  answersRecord.push({
+    q: current.q,
+    phase: current.phase,
+    correct: current.opts[current.ans],
+    chosen: "ไม่ตอบ",
+    audio: current.audio || null,
+    img: current.img || null
+  });
+  // enable Next
+  document.getElementById('nextBtn').disabled = false;
+}
 
-function checkTeacher(){
-  if(document.getElementById("teacherCode").value === "2222"){
-    renderTeacher();
-    showScreen("teacherScreen");
-  }else{
-    alert("รหัสผิด!");
+/* ======= ปุ่มถัดไป ======= */
+function nextQuestion(){
+  // prevent going past end
+  currentIndex++;
+  if(currentIndex < totalQuestions){
+    showQuestion();
+  } else {
+    finishAll();
   }
 }
 
-function renderTeacher(){
-  const arr = JSON.parse(localStorage.getItem("yctScores")||"[]");
-  let html = "<tr><th>ชื่อ</th><th>คะแนน</th><th>วันที่</th><th>ลบ</th></tr>";
-  arr.forEach((r,i)=>{
-    html += `
-      <tr>
-        <td>${r.name}</td>
-        <td>${r.score}/${r.total}</td>
-        <td>${r.date}</td>
-        <td><button onclick="deleteRec(${i})">ลบ</button></td>
-      </tr>
-    `;
-  });
-  document.getElementById("teacherTable").innerHTML = html;
+/* ======= จบทั้งชุด ======= */
+function finishAll(){
+  clearInterval(timerId);
+  audioPlayer.pause();
+  document.getElementById('quizScreen').classList.add('hidden');
+
+  const raw = rawCorrect;
+  const total = totalQuestions;
+  const real = Math.round((raw / total) * 200);
+  const pass = real >= 120;
+
+  document.getElementById('resultScreen').classList.remove('hidden');
+  document.getElementById('scoreSummary').innerHTML = `<b>คะแนนดิบ:</b> ${raw}/${total} &nbsp;&nbsp; <b>คะแนนจริง:</b> ${real}/200`;
+  document.getElementById('passFail').innerHTML = pass ? `<span style="color:var(--good);font-weight:700">ผ่าน ✅</span>` : `<span style="color:var(--bad);font-weight:700">ไม่ผ่าน ❌</span>`;
+
+  const answerDiv = document.getElementById('answerList');
+  answerDiv.innerHTML = answersRecord.map((a,i)=>`
+    <div style="padding:8px;border-radius:8px;margin-bottom:6px;background:#fbfeff;border:1px solid #eaf6ff;">
+      <div><b>ข้อ ${i+1} (${a.phase})</b></div>
+      <div class="small" style="margin-top:6px">${a.q}</div>
+      ${ a.img ? `<div style="margin-top:8px"><img src="${a.img}" style="max-width:180px;display:block;border-radius:6px;border:1px solid #eaf6ff"></div>` : ''}
+      <div style="margin-top:6px;">✅ ถูก: <b style="color:${'#1976D2'}">${a.correct}</b> &nbsp;&nbsp; 📝 คุณตอบ: <b>${a.chosen}</b></div>
+      ${ a.audio ? `<div class="small" style="margin-top:6px">🔊 มีไฟล์เสียง: <code>${a.audio}</code></div>` : '' }
+    </div>
+  `).join('');
+
+  // store meta temporarily for saving
+  document.getElementById('resultScreen').dataset.raw = raw;
+  document.getElementById('resultScreen').dataset.real = real;
+  document.getElementById('resultScreen').dataset.total = total;
 }
 
-function deleteRec(i){
-  const arr = JSON.parse(localStorage.getItem("yctScores")||"[]");
+/* ======= บันทึกผลใน localStorage ======= */
+function saveResult(){
+  const name = document.getElementById('studentName').value.trim();
+  if(!name) return alert('กรุณากรอกชื่อก่อนบันทึก');
+  const raw = parseInt(document.getElementById('resultScreen').dataset.raw,10) || 0;
+  const real = parseInt(document.getElementById('resultScreen').dataset.real,10) || 0;
+  const total = parseInt(document.getElementById('resultScreen').dataset.total,10) || 0;
+  const now = new Date();
+  const timeStr = now.toLocaleString('th-TH');
+  const rec = { name, set: setName, raw:`${raw}/${total}`, real:`${real}/200`, score: real, time: timeStr, answers: answersRecord };
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  arr.push(rec);
+  arr.sort((a,b)=> (b.score||0) - (a.score||0));
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  alert('บันทึกคะแนนเรียบร้อย!');
+  backToHome();
+}
+
+/* ======= Leaderboard ======= */
+function showLeaderboard(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('teacherLogin').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.remove('hidden');
+
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  const tbody = document.querySelector('#leaderboardTable tbody');
+  if(arr.length === 0){ tbody.innerHTML = '<tr><td colspan="6">ยังไม่มีคะแนน</td></tr>'; return; }
+  tbody.innerHTML = arr.map((r,i)=>`<tr>
+    <td>${escapeHtml(r.name)}</td>
+    <td>${r.set}</td>
+    <td>${r.raw}</td>
+    <td>${r.real}</td>
+    <td>${r.time}</td>
+    <td><button onclick="deleteScore(${i})" class="ghost">ลบ</button></td>
+  </tr>`).join('');
+}
+
+function deleteScore(i){
+  if(!confirm('ต้องการลบเรคคอร์ดนี้หรือไม่?')) return;
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
   arr.splice(i,1);
-  localStorage.setItem("yctScores",JSON.stringify(arr));
-  renderTeacher();
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  showLeaderboard();
+}
+function clearLocalScores(){
+  if(!confirm('ลบคะแนนทั้งหมดจาก localStorage?')) return;
+  localStorage.removeItem('yctScores');
+  showLeaderboard();
 }
 
-function logoutTeacher(){
-  document.getElementById("teacherCode").value="";
-  showScreen("startScreen");
+/* ======= โหมดครู ======= */
+function showTeacherLogin(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('teacherLogin').classList.remove('hidden');
+}
+function enterTeacherMode(){
+  const pw = document.getElementById('teacherPass').value;
+  if(pw !== '2222') return alert('รหัสไม่ถูกต้อง');
+  document.getElementById('teacherLogin').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.remove('hidden');
+  renderTeacherTable();
+}
+function renderTeacherTable(){
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  const tbody = document.querySelector('#teacherTable tbody');
+  if(arr.length === 0){ tbody.innerHTML = '<tr><td colspan="6">ยังไม่มีเรคคอร์ด</td></tr>'; return; }
+  tbody.innerHTML = arr.map((r,i)=>`<tr>
+    <td>${escapeHtml(r.name)}</td>
+    <td>${r.set}</td>
+    <td>${r.raw}</td>
+    <td>${r.real}</td>
+    <td>${r.time}</td>
+    <td><button onclick="teacherDelete(${i})" class="ghost">ลบ</button></td>
+  </tr>`).join('');
+}
+function teacherDelete(i){
+  if(!confirm('ลบเรคคอร์ดนี้?')) return;
+  const arr = JSON.parse(localStorage.getItem('yctScores') || '[]');
+  arr.splice(i,1);
+  localStorage.setItem('yctScores', JSON.stringify(arr));
+  renderTeacherTable();
 }
 
-// ----------------------------- Utils -----------------------------
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(sc=>sc.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+/* ======= กลับหน้าหลัก ======= */
+function backToHome(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  audioPlayer.pause();
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('leaderboardScreen').classList.add('hidden');
+  document.getElementById('teacherScreen').classList.add('hidden');
+  document.getElementById('teacherLogin').classList.add('hidden');
 }
 
-function backToHome(){ showScreen("startScreen"); }
+/* ======= Utility ======= */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+/* ======= Prepare voices (no pinyin reading) - optional; not used for audio files ======= */
+if(window.speechSynthesis){
+  speechSynthesis.onvoiceschanged = ()=>{ /* ready */ };
+}
+
+/* ======= end script ======= */
 </script>
 </body>
 </html>
